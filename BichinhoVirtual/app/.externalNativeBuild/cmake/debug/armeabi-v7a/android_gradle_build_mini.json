@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "/Users/suelen/Documents/Unicamp/IA369-AffectiveComputing/Projeto/repositorio/Projeto_IA369/BichinhoVirtual/app/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/suelen/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/suelen/Documents/Unicamp/IA369-AffectiveComputing/Projeto/repositorio/Projeto_IA369/BichinhoVirtual/app/.externalNativeBuild/cmake/debug/armeabi-v7a --target clean"
+  ],
+  "libraries": {
+    "native-lib-Debug-armeabi-v7a": {
+      "artifactName": "native-lib",
+      "buildCommand": "/Users/suelen/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/suelen/Documents/Unicamp/IA369-AffectiveComputing/Projeto/repositorio/Projeto_IA369/BichinhoVirtual/app/.externalNativeBuild/cmake/debug/armeabi-v7a --target native-lib",
+      "abi": "armeabi-v7a",
+      "output": "/Users/suelen/Documents/Unicamp/IA369-AffectiveComputing/Projeto/repositorio/Projeto_IA369/BichinhoVirtual/app/build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so"
+    }
+  }
+}
