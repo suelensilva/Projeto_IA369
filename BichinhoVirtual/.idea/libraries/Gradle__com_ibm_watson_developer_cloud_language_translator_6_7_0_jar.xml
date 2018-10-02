@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ibm.watson.developer_cloud:language-translator:6.7.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/language-translator/6.7.0/16373b446e13031cec4f92e14f9d3b140d51bdfa/language-translator-6.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/language-translator/6.7.0/ca403f3f91e60b1a17fcfdf6623bccd940dd181d/language-translator-6.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">BichinhoVirtual</string>
+
+    <string name="sentiment_report">
+        SENTIMENTO:\n
+        \tLabel: %1$s\n
+        \tScore: %2$s
+    </string>
+
+    <string name="emotion_report">
+        EMOÇÃO:\n
+        \tSadness: %1$s\n
+        \tJoy: %2$s\n
+        \tFear: %3$s\n
+        \tDisgust: %4$s\n
+        \tAnger: %5$s\n
+    </string>
 </resources>

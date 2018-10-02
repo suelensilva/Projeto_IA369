@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ibm.watson.developer_cloud:tone-analyzer:6.7.0@jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/tone-analyzer/6.7.0/17ee0d44bda23bc416ded3ae9adda8a440e5ae86/tone-analyzer-6.7.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ibm.watson.developer_cloud/tone-analyzer/6.7.0/c9ae7d25732f5fb38963c078a2c85fbdf6a1769e/tone-analyzer-6.7.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
