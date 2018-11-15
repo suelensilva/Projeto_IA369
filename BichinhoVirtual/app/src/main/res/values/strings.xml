@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BichinhoVirtual</string>
+    <string name="app_name">Bichinho Virtual</string>
 
     <string name="sentiment_report">
         SENTIMENTO:\n
@@ -15,4 +15,8 @@
         \tDisgust: %4$s\n
         \tAnger: %5$s\n
     </string>
+    <string name="microfone">Microfone</string>
+    <string name="camera">Câmera</string>
+    <string name="settings">Configurações</string>
+    <string name="hint">Digite aqui...</string>
 </resources>

@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/config_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/config"
+        android:contentDescription="@string/settings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <TextView
         android:id="@+id/sample_text"
@@ -42,16 +56,57 @@
         app:layout_constraintTop_toBottomOf="@+id/sentiment_report_text"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:layout_marginEnd="8dp"
+    <ImageView
+        android:id="@+id/creature"
+        android:layout_width="219dp"
+        android:layout_height="219dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/extrov_neutro"
+        android:contentDescription="@string/camera"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/input_edit_text"
+        android:layout_width="214dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/input_background"
+        android:hint="@string/hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/camera_button"
+        app:layout_constraintHorizontal_bias="0.0"/>
+
+    <ImageView
+        android:id="@+id/camera_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/camera"
+        android:contentDescription="@string/camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/microphone_button"
+        />
+
+    <ImageView
+        android:id="@+id/microphone_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/mic"
         android:onClick="startSpeechRecognizer"
-        android:text="Conversar"
+        android:contentDescription="@string/microfone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        />
 
 </android.support.constraint.ConstraintLayout>
