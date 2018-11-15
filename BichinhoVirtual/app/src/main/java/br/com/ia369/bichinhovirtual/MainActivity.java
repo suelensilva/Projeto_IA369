@@ -6,9 +6,13 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +41,21 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private TextView mTextView;
     private TextView mSentimentReportTextView;
     private TextView mEmotionReportTextView;
+    private EditText mEditText;
     private SpeechRecognizer speechRecognizer;
+    private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            String text = mEditText.getText().toString();
+
+            if(!TextUtils.isEmpty(text)) {
+                translateToEnglish(text);
+            }
+
+            return false;
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mTextView = findViewById(R.id.sample_text);
         mSentimentReportTextView = findViewById(R.id.sentiment_report_text);
         mEmotionReportTextView = findViewById(R.id.emotion_report_text);
+        mEditText = findViewById(R.id.input_edit_text);
+        mEditText.setOnEditorActionListener(mOnEditorActionListener);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
@@ -232,5 +252,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
+
+        mEditText.setText("");
     }
 }

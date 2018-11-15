@@ -73,6 +73,8 @@
         android:id="@+id/input_edit_text"
         android:layout_width="214dp"
         android:layout_height="48dp"
+        android:inputType="text"
+        android:imeOptions="actionGo"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/input_background"
@@ -80,7 +82,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/camera_button"
-        app:layout_constraintHorizontal_bias="0.0"/>
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageView
         android:id="@+id/camera_button"
