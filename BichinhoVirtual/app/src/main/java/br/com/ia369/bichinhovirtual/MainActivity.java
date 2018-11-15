@@ -11,12 +11,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private TextView mSentimentReportTextView;
     private TextView mEmotionReportTextView;
     private EditText mEditText;
+    private ImageView mCreatureImageView;
     private SpeechRecognizer speechRecognizer;
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mEmotionReportTextView = findViewById(R.id.emotion_report_text);
         mEditText = findViewById(R.id.input_edit_text);
         mEditText.setOnEditorActionListener(mOnEditorActionListener);
+        mCreatureImageView = findViewById(R.id.creature);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
@@ -248,11 +249,49 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
                 mEmotionReportTextView.setText(emotionReport);
                 mEmotionReportTextView.setVisibility(View.VISIBLE);
+
+                Double[] scores = new Double[] {
+                        Double.parseDouble(sadness),
+                        Double.parseDouble(joy),
+                        Double.parseDouble(fear),
+                        Double.parseDouble(disgust),
+                        Double.parseDouble(anger)
+                };
+                calculateMoreRelevantEmotion(scores);
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
         mEditText.setText("");
+    }
+
+    private void calculateMoreRelevantEmotion(Double[] emotionScores) {
+        int relevantEmotionIndex = -1;
+        double currRelevantScore = -1;
+        for(int i = 0; i < emotionScores.length; i++) {
+            if(emotionScores[i] > currRelevantScore) {
+                currRelevantScore = emotionScores[i];
+                relevantEmotionIndex = i;
+            }
+        }
+
+        switch (relevantEmotionIndex) {
+            case 0: // sadness
+                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                break;
+            case 1: // joy
+                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                break;
+            case 2: // fear
+                mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+                break;
+            case 3: // disgust
+                mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
+                break;
+            case 4: // anger
+                mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
+                break;
+        }
     }
 }
