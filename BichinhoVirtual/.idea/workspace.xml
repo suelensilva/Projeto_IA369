@@ -2583,68 +2583,6 @@
               <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
               <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bichinhovirtual" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bichinhovirtual" type="462c0819:PsiDirectoryNode" />
-              <item name="retrofit" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BichinhoVirtual" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BichinhoVirtual" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="res" type="462c0819:PsiDirectoryNode" />
-              <item name="drawable" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -2828,7 +2766,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="Android Profiler" order="7" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -2845,8 +2782,8 @@
       <window_info id="Captures" order="2" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
-      <window_info active="true" anchor="bottom" id="Build" order="7" visible="true" weight="0.35402906" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
+      <window_info anchor="bottom" id="Build" order="7" visible="true" weight="0.35402906" />
       <window_info anchor="right" id="Android WiFi ADB" order="3" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.3297568" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
