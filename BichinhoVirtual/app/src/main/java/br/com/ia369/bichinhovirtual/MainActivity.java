@@ -4,9 +4,14 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -54,7 +59,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener {
+public class MainActivity extends AppCompatActivity implements RecognitionListener, SensorEventListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
@@ -72,12 +79,17 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private String mTempPhotoPath;
 
+    private SensorManager mSensorManager;
+    private Sensor mProximity;
+    private PowerManager.WakeLock mWakeLock;
+
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
             String text = mEditText.getText().toString();
 
             if(!TextUtils.isEmpty(text)) {
+                showProgressView();
                 translateToEnglish(text);
             }
 
@@ -99,6 +111,32 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if (mSensorManager != null) {
+            mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        }
+
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        if (powerManager != null && powerManager.isWakeLockLevelSupported(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK)) {
+            Log.d(TAG, "Screen off wake lock supported");
+            mWakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG);
+        } else {
+            Log.d(TAG, "Screen off wake lock not supported");
+            mWakeLock = null;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(this);
+        super.onPause();
     }
 
     public void startSpeechRecognizer(View view) {
@@ -322,6 +360,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
                 break;
         }
+
+        dismissProgressView();
     }
 
     private void showProgressView() {
@@ -453,6 +493,38 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             return face.getIsSmilingProbability() > SMILING_PROB_THRESHOLD;
         }
         return false;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (mWakeLock == null) {
+            return;
+        }
+
+        // O sensor pode ser booleano e o valor ser 0.0(perto) ou 1.0(longe), ou
+        // ter um range. Se tiver um range maior que 1.0, considera-se perto um valor
+        // menor que 5.0
+        boolean isNear;
+        if (event.sensor.getMaximumRange() == 1) {
+            isNear = event.values[0] == 0.0f;
+        } else {
+            isNear = event.values[0] < 5.0f;
+        }
+
+        if (isNear && !mWakeLock.isHeld()) {
+            mWakeLock.acquire(1000 * 60 * 60);// 1 hora
+            setupIdDarkMode();
+        } else if (mWakeLock.isHeld()) {
+            mWakeLock.release();
+        }
+    }
+
+    private void setupIdDarkMode() {
+        mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     static class ProcessImageAsyncTask extends AsyncTask<Void, Void, Boolean> {

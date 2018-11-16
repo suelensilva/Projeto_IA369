@@ -129,4 +129,13 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/recording_container"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="#AA000000" />
+
 </android.support.constraint.ConstraintLayout>
