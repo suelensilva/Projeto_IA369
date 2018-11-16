@@ -1,23 +1,41 @@
 package br.com.ia369.bichinhovirtual;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +44,7 @@ import br.com.ia369.bichinhovirtual.model.TranslationResponse;
 import br.com.ia369.bichinhovirtual.retrofit.IbmNluService;
 import br.com.ia369.bichinhovirtual.retrofit.ServiceGenerator;
 import br.com.ia369.bichinhovirtual.retrofit.TranslateService;
+import br.com.ia369.bichinhovirtual.util.BitmapUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -37,12 +56,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener {
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_STORAGE_PERMISSION = 1;
+
+    private static final String FILE_PROVIDER_AUTHORITY = "br.com.ia369.bichinhovirtual.fileprovider";
+
+    private static final double SMILING_PROB_THRESHOLD = .15;
+
     private TextView mTextView;
     private TextView mSentimentReportTextView;
     private TextView mEmotionReportTextView;
     private EditText mEditText;
     private ImageView mCreatureImageView;
     private SpeechRecognizer speechRecognizer;
+
+    private String mTempPhotoPath;
+
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -77,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mSentimentReportTextView.setVisibility(View.GONE);
         mEmotionReportTextView.setVisibility(View.GONE);
 
-        mTextView.setText("Ouvindo...");
+        mTextView.setText(R.string.listening);
 
         Intent intent = new Intent
                 (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -155,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         Call<TranslationResponse> responseCallback = service.translate(queryMap);
         responseCallback.enqueue(new Callback<TranslationResponse>() {
             @Override
-            public void onResponse(Call<TranslationResponse> call, Response<TranslationResponse> response) {
+            public void onResponse(@NonNull Call<TranslationResponse> call, @NonNull Response<TranslationResponse> response) {
                 TranslationResponse translation = response.body();
                 if(translation != null) {
                     String translatedText = translation.text[0];
@@ -164,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
 
             @Override
-            public void onFailure(Call<TranslationResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<TranslationResponse> call, @NonNull Throwable t) {
 
             }
         });
@@ -199,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             Call<ResponseBody> responseCallback = ibmNluService.analyse(queryMap, requestBody);
             responseCallback.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     ResponseBody responseBody = response.body();
                     if(responseBody != null) {
                         parseNluResponse(responseBody);
@@ -207,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     Log.d(MainActivity.class.getSimpleName(), "Failure");
                 }
             });
@@ -257,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                         Double.parseDouble(disgust),
                         Double.parseDouble(anger)
                 };
-                calculateMoreRelevantEmotion(scores);
+                calculateMoreRelevantEmotionAndShowNewFace(scores);
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -266,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mEditText.setText("");
     }
 
-    private void calculateMoreRelevantEmotion(Double[] emotionScores) {
+    private void calculateMoreRelevantEmotionAndShowNewFace(Double[] emotionScores) {
         int relevantEmotionIndex = -1;
         double currRelevantScore = -1;
         for(int i = 0; i < emotionScores.length; i++) {
@@ -292,6 +321,169 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             case 4: // anger
                 mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
                 break;
+        }
+    }
+
+    private void showProgressView() {
+        findViewById(R.id.progress).setVisibility(View.VISIBLE);
+    }
+
+    private void dismissProgressView() {
+        findViewById(R.id.progress).setVisibility(View.GONE);
+    }
+
+    public void analyzeFace(View view) {
+        // Check for the external storage permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // If you do not have permission, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_STORAGE_PERMISSION);
+        } else {
+            // Launch the camera if the permission exists
+            launchCamera();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        // Called when you request permission to read and write to external storage
+        switch (requestCode) {
+            case REQUEST_STORAGE_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // If you get permission, launch the camera
+                    launchCamera();
+                } else {
+                    // If you do not get permission, show a Toast
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * Creates a temporary image file and captures a picture to store in it.
+     */
+    private void launchCamera() {
+
+        // Create the capture image intent
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+        takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the temporary File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = BitmapUtils.createTempImageFile(this);
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+
+                // Get the path of the temporary file
+                mTempPhotoPath = photoFile.getAbsolutePath();
+
+                // Get the content URI for the image file
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        FILE_PROVIDER_AUTHORITY,
+                        photoFile);
+
+                // Add the URI so the camera can store the image
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                // Launch the camera activity
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the image capture activity was called and was successful
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            new ProcessImageAsyncTask(this).execute();
+        } else {
+            // Otherwise, delete the temporary image file
+            BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+        }
+    }
+
+    boolean processImage() {
+        // Resample the saved image to fit the ImageView
+        Bitmap resultBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
+        return isSmiling(resultBitmap);
+    }
+
+    private void showFaceResult(boolean isSmiling) {
+        if(isSmiling) {
+            mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+        } else {
+            mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+        }
+    }
+
+    private boolean isSmiling(Bitmap picture) {
+        // Create the face detector, disable tracking and enable classifications
+        FaceDetector detector = new FaceDetector.Builder(this)
+                .setTrackingEnabled(false)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setProminentFaceOnly(true)
+                .build();
+
+        // Build the frame
+        Frame frame = new Frame.Builder().setBitmap(picture).build();
+
+        // Detect the faces
+        SparseArray<Face> faces = detector.detect(frame);
+
+        if (faces.size() == 0) {
+            Toast.makeText(this, "Nenhuma face encontrada.", Toast.LENGTH_SHORT).show();
+        } else {
+            Face face = faces.valueAt(0);
+            return face.getIsSmilingProbability() > SMILING_PROB_THRESHOLD;
+        }
+        return false;
+    }
+
+    static class ProcessImageAsyncTask extends AsyncTask<Void, Void, Boolean> {
+
+        private WeakReference<MainActivity> activity;
+
+        ProcessImageAsyncTask(MainActivity activity) {
+            this.activity = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            activity.get().showProgressView();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            // Process the image and set it to the TextView
+            return activity.get().processImage();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            MainActivity mainActivity = activity.get();
+            if(mainActivity != null) {
+                mainActivity.dismissProgressView();
+                mainActivity.showFaceResult(aBoolean);
+            }
         }
     }
 }

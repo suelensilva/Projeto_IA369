@@ -18,5 +18,9 @@
     <string name="microfone">Microfone</string>
     <string name="camera">Câmera</string>
     <string name="settings">Configurações</string>
-    <string name="hint">Digite aqui...</string>
+    <string name="hint">Digite aqui…</string>
+    <string name="permission_denied">Permissão de armazenamento negada</string>
+    <string name="error">Erro ao procurar imagem</string>
+    <string name="saved_message">Imagem armazenada em %1$s</string>
+    <string name="listening">Ouvindo…</string>
 </resources>
