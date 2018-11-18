@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.ia369.bichinhovirtual.appraisal.Appraisal;
+import br.com.ia369.bichinhovirtual.appraisal.EmotionEngineService;
 import br.com.ia369.bichinhovirtual.model.TranslationResponse;
 import br.com.ia369.bichinhovirtual.retrofit.IbmNluService;
 import br.com.ia369.bichinhovirtual.retrofit.ServiceGenerator;
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             Log.d(TAG, "Screen off wake lock not supported");
             mWakeLock = null;
         }
+
+        scheduleEmotionEngineJob();
     }
 
     @Override
@@ -138,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onPause() {
         mSensorManager.unregisterListener(this);
         super.onPause();
+    }
+
+    private void scheduleEmotionEngineJob() {
+        EmotionEngineService.scheduleEmotionEngineJob(this);
     }
 
     public void startSpeechRecognizer(View view) {
