@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.ia369.bichinhovirtual.appraisal.Appraisal;
 import br.com.ia369.bichinhovirtual.model.TranslationResponse;
 import br.com.ia369.bichinhovirtual.retrofit.IbmNluService;
 import br.com.ia369.bichinhovirtual.retrofit.ServiceGenerator;
@@ -521,6 +522,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void setupIdDarkMode() {
         mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+        Appraisal appraisal = new Appraisal();
+        try {
+            double intensity = appraisal.evaluateFear();
+            Log.d(TAG, "Fear intensity = "+intensity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
