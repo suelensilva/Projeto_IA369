@@ -30,6 +30,16 @@
 
     <string name="title_activity_settings">Configurações</string>
 
+    <string-array name="creature_type_entries">
+        <item>Extrovertido</item>
+        <item>Neurótico</item>
+    </string-array>
+
+    <string-array name="creature_type_values">
+        <item>100</item>
+        <item>101</item>
+    </string-array>
+
     <string-array name="forecast_entries">
         <item>Bom</item>
         <item>Frio</item>

@@ -4,6 +4,14 @@
         android:title="Exibir log na tela principal."
         android:key="show_log" />
 
+    <ListPreference
+        android:defaultValue="extrovert"
+        android:key="personality_type"
+        android:title="Tipo de personalidade"
+        android:entries="@array/creature_type_entries"
+        android:entryValues="@array/creature_type_values"
+        />
+
     <EditTextPreference
         android:defaultValue="10"
         android:title="Intervalo de decaimento (segundos)"
