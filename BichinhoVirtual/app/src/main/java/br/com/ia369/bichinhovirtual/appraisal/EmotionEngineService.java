@@ -143,6 +143,7 @@ public class EmotionEngineService extends Service {
 
             Emotion emotionFromTime;
             Emotion emotionFromWeather;
+            Emotion emotionFromLocation;
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -170,23 +171,38 @@ public class EmotionEngineService extends Service {
 
 
             int weatherConditions = sharedPreferences.getInt("weather_condition_prefs", AppraisalConstants.INPUT_FORECAST_GOOD);
+            int lastWeatherResult = sharedPreferences.getInt("last_weather_result", -1);
 
-            if(weatherConditions > 0) {
-                int lastWeatherResult = sharedPreferences.getInt("last_weather_result", -1);
-
-                if(lastWeatherResult != weatherConditions) {
-                    EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), weatherConditions);
-                    if (emotionVariables != null) {
-                        emotionFromWeather = emotionEngineService.appraiseNewEmotion(emotionVariables);
-                        if (emotionFromWeather != null) {
-                            Log.d(TAG, "New emotion from weather = " + emotionFromWeather.getName());
-                        }
+            if(lastWeatherResult != weatherConditions) {
+                EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), weatherConditions);
+                if (emotionVariables != null) {
+                    emotionFromWeather = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                    if (emotionFromWeather != null) {
+                        Log.d(TAG, "New emotion from weather = " + emotionFromWeather.getName());
                     }
-
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("last_weather_result", weatherConditions);
-                    editor.apply();
                 }
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("last_weather_result", weatherConditions);
+                editor.apply();
+            }
+
+
+            int movingStatus = sharedPreferences.getInt("moving_status_prefs", AppraisalConstants.INPUT_LOCATION_IDLE);
+            int lastMovingStatus = sharedPreferences.getInt("last_moving_status_result", -1);
+
+            if(lastMovingStatus != movingStatus) {
+                EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), movingStatus);
+                if (emotionVariables != null) {
+                    emotionFromLocation = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                    if (emotionFromLocation != null) {
+                        Log.d(TAG, "New emotion from location = " + emotionFromLocation.getName());
+                    }
+                }
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("last_moving_status_result", movingStatus);
+                editor.apply();
             }
 
             return null;
