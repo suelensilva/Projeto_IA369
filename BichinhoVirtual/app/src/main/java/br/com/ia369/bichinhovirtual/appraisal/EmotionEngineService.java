@@ -23,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import br.com.ia369.bichinhovirtual.MainActivity;
 import br.com.ia369.bichinhovirtual.R;
@@ -280,12 +281,8 @@ public class EmotionEngineService extends Service {
         Log.d(TAG, "Emotion intensity = "+newEmotionIntensity);
 
         if(newEmotion != currEmotion && newEmotion == AppraisalConstants.EMOTION_BORED) {
-            String message;
-            if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
-                message = "Como está meu humano favorito?";
-            } else {
-                message = "Oi??? Esqueceu que eu existo?";
-            }
+            String message = getRandomBoredMessage(creature.getPersonality());
+
             createNotification(message);
         }
 
@@ -380,6 +377,19 @@ public class EmotionEngineService extends Service {
         }
 
         return null;
+    }
+
+    private String getRandomBoredMessage(int personality) {
+        String[] optionsArray;
+        if(personality == AppraisalConstants.PERSONALITY_EXTROVERT) {
+            optionsArray = getResources().getStringArray(R.array.extrovert_bored_messages);
+        } else {
+            optionsArray = getResources().getStringArray(R.array.neurotic_bored_messages);
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(optionsArray.length);
+        return optionsArray[index];
     }
 
     private void createNotification(String message) {

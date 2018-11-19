@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Bichinho Virtual</string>
 
     <string name="sentiment_report">
@@ -52,5 +52,17 @@
         <item>209</item>
         <item>210</item>
         <item>208</item>
+    </string-array>
+
+    <string-array name="extrovert_bored_messages">
+        <item>Como está meu humano favorito?</item>
+        <item tools:ignore="Typos">Acho que ouvi um "cri cri"…</item>
+        <item>E aí, qual é a boa de hoje?</item>
+    </string-array>
+
+    <string-array name="neurotic_bored_messages">
+        <item>Oi??? Esqueceu que eu existo?</item>
+        <item>Ninguém se importa comigo…</item>
+        <item>Oh vida! Oh céus! Oh tédio!</item>
     </string-array>
 </resources>
