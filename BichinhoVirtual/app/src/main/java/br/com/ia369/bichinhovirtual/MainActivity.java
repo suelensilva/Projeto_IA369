@@ -314,6 +314,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         TranslateService service = retrofit.create(TranslateService.class);
         Map<String, String> queryMap = new HashMap<>();
+
+        // TODO remover string de key do versionamento
         queryMap.put("key", "trnsl.1.1.20180930T235915Z.de076450d8e5aaf8.eb3477709ac41d3e9d7cac25568dff613f1b6270");
         queryMap.put("lang", "pt-en");
         queryMap.put("text", portugueseText);
@@ -337,6 +339,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void classifyEmotion(String text) {
+
+        // TODO remover username e password do versionamento
         IbmNluService ibmNluService = ServiceGenerator.createService(
                 IbmNluService.class,
                 "8eab499b-fe59-4e10-ac17-41b6ae981e53", "lUVcZ14sGgfb");
@@ -442,27 +446,23 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         }
 
-        Intent intent = new Intent(this, EmotionEngineService.class);
-        intent.setAction(AppraisalConstants.ACTIVE_INPUT_ACTION);
         switch (relevantEmotionIndex) {
             case 0: // sadness
-                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_SADNESS);
+                triggerInputAction(AppraisalConstants.INPUT_TEXT_SADNESS);
                 break;
             case 1: // joy
-                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_JOY);
+                triggerInputAction(AppraisalConstants.INPUT_TEXT_JOY);
                 break;
             case 2: // fear
-                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_FEAR);
+                triggerInputAction(AppraisalConstants.INPUT_TEXT_FEAR);
                 break;
             case 3: // disgust
-                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_DISGUST);
+                triggerInputAction(AppraisalConstants.INPUT_TEXT_DISGUST);
                 break;
             case 4: // anger
-                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_ANGER);
+                triggerInputAction(AppraisalConstants.INPUT_TEXT_ANGER);
                 break;
         }
-
-        startService(intent);
 
         dismissProgressView();
     }
@@ -569,9 +569,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void showFaceResult(boolean isSmiling) {
         if(isSmiling) {
-            mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+            triggerInputAction(AppraisalConstants.INPUT_FACE_POSITIVE);
         } else {
-            mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+            triggerInputAction(AppraisalConstants.INPUT_FACE_NEGATIVE);
         }
     }
 
@@ -623,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void setupIdDarkMode() {
-        mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+//        mCreatureImageView.setImageResource(R.drawable.extrov_medo);
 //        Appraisal appraisal = new Appraisal();
 //        try {
 //            double intensity = appraisal.evaluateFear();
@@ -631,10 +631,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        triggerInputAction(AppraisalConstants.INPUT_PROXIMITY_SENSOR);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private void triggerInputAction(int type) {
+        Intent intent = new Intent(this, EmotionEngineService.class);
+        intent.setAction(AppraisalConstants.ACTIVE_INPUT_ACTION);
+        intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, type);
+        startService(intent);
     }
 
     static class ProcessImageAsyncTask extends AsyncTask<Void, Void, Boolean> {
