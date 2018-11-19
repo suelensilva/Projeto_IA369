@@ -9,9 +9,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -19,6 +21,7 @@ import com.occ.entities.Emotion;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.ia369.bichinhovirtual.MainActivity;
@@ -56,6 +59,7 @@ public class EmotionEngineService extends Service {
         if(intent != null) {
             if(intent.hasExtra(INTERVAL_REQUEST)) {
                 scheduleEmotionEngineJob(this);
+                new DecayEmotionAsyncTask(this).execute();
                 new AppraisePassiveInputsAsyncTask(this).execute();
             } else {
                 String action = intent.getAction();
@@ -66,22 +70,6 @@ public class EmotionEngineService extends Service {
                             if(inputType > 0) {
                                 new AppraiseActiveInputAsyncTask(this).execute(inputType);
                             }
-                            break;
-                        case AppraisalConstants.INPUT_TIME_DISPOSED_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TIME_INDISPOSED_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_LOCATION_IDLE_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_LOCATION_MOVING_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_FORECAST_COLD_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_FORECAST_GOOD_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_FORECAST_HOT_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_FORECAST_RAIN_ACTION:
                             break;
                     }
                 }
@@ -109,6 +97,31 @@ public class EmotionEngineService extends Service {
         }
     }
 
+    static class DecayEmotionAsyncTask extends AsyncTask<Void, Void, Void> {
+        WeakReference<EmotionEngineService> emotionEngineServiceWeakReference;
+
+        DecayEmotionAsyncTask(EmotionEngineService instance) {
+            this.emotionEngineServiceWeakReference = new WeakReference<>(instance);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "Decaying emotion...");
+
+            EmotionEngineService emotionEngineService = emotionEngineServiceWeakReference.get();
+            Application application = emotionEngineService.getApplication();
+            EmotionRepository repository = new EmotionRepository(application);
+
+            Creature creature = repository.getCreature();
+            emotionEngineService.decayEmotionIntensity(creature);
+
+            Log.d(TAG, "new decayed emotion = "+creature.getEmotion());
+            repository.updateCreature(creature);
+
+            return null;
+        }
+    }
+
     static class AppraisePassiveInputsAsyncTask extends AsyncTask<Void, Void, Void> {
         WeakReference<EmotionEngineService> emotionEngineServiceWeakReference;
 
@@ -124,19 +137,57 @@ public class EmotionEngineService extends Service {
             Application application = emotionEngineService.getApplication();
             EmotionRepository repository = new EmotionRepository(application);
 
-            // TODO pegar os valores dos inputs passivos
-
             Creature creature = repository.getCreature();
-            emotionEngineService.decayEmotionIntensity(creature);
 
-            Log.d(TAG, "[passive] emotion = "+creature.getEmotion());
-            repository.updateCreature(creature);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(emotionEngineService);
 
-//            EmotionVariables emotionVariables = repository.getEmotionVariable(AppraisalConstants.PERSONALITY_EXTROVERT, AppraisalConstants.INPUT_TEXT_JOY);
-//
-//            if(emotionVariables != null) {
-//                emotionEngineService.appraiseEmotions(emotionVariables);
-//            }
+            Emotion emotionFromTime;
+            Emotion emotionFromWeather;
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            if(hour >= creature.getDispositionTimeStart() && hour < creature.getDispositionTimeEnd()) {
+                int inputAction = AppraisalConstants.INPUT_TIME_DISPOSED;
+
+                int lastDispositionResult = sharedPreferences.getInt("last_disposition_result", -1);
+
+                if(lastDispositionResult != inputAction) {
+                    EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), inputAction);
+                    if (emotionVariables != null) {
+                        emotionFromTime = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                        if (emotionFromTime != null) {
+                            Log.d(TAG, "New emotion from time = " + emotionFromTime.getName());
+                        }
+                    }
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("last_disposition_result", inputAction);
+                    editor.apply();
+                }
+            }
+
+
+            int weatherConditions = sharedPreferences.getInt("weather_condition_prefs", AppraisalConstants.INPUT_FORECAST_GOOD);
+
+            if(weatherConditions > 0) {
+                int lastWeatherResult = sharedPreferences.getInt("last_weather_result", -1);
+
+                if(lastWeatherResult != weatherConditions) {
+                    EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), weatherConditions);
+                    if (emotionVariables != null) {
+                        emotionFromWeather = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                        if (emotionFromWeather != null) {
+                            Log.d(TAG, "New emotion from weather = " + emotionFromWeather.getName());
+                        }
+                    }
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("last_weather_result", weatherConditions);
+                    editor.apply();
+                }
+            }
 
             return null;
         }
