@@ -62,7 +62,7 @@
         android:layout_height="219dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/extrov_neutro"
-        android:contentDescription="@string/camera"
+        android:contentDescription="@string/creature_content_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

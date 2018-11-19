@@ -23,4 +23,5 @@
     <string name="error">Erro ao procurar imagem</string>
     <string name="saved_message">Imagem armazenada em %1$s</string>
     <string name="listening">Ouvindo…</string>
+    <string name="creature_content_description">Imagem do bichinho virtual</string>
 </resources>

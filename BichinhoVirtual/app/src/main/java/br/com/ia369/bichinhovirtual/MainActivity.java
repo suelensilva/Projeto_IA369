@@ -1,6 +1,8 @@
 package br.com.ia369.bichinhovirtual;
 
 import android.Manifest;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +19,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -45,8 +48,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
 import br.com.ia369.bichinhovirtual.appraisal.EmotionEngineService;
+import br.com.ia369.bichinhovirtual.model.Creature;
 import br.com.ia369.bichinhovirtual.model.TranslationResponse;
+import br.com.ia369.bichinhovirtual.modelview.CreatureViewModel;
 import br.com.ia369.bichinhovirtual.retrofit.IbmNluService;
 import br.com.ia369.bichinhovirtual.retrofit.ServiceGenerator;
 import br.com.ia369.bichinhovirtual.retrofit.TranslateService;
@@ -84,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
 
+    private CreatureViewModel mCreatureViewModel;
+    private Creature mCreature;
+
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -112,6 +121,17 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
+
+        mCreatureViewModel = ViewModelProviders.of(this).get(CreatureViewModel.class);
+        mCreatureViewModel.getCreature().observe(this, new Observer<Creature>() {
+            @Override
+            public void onChanged(@Nullable Creature creature) {
+                mCreature = creature;
+                if (creature != null) {
+                    updateCreatureEmotion(creature);
+                }
+            }
+        });
 
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (mSensorManager != null) {
@@ -144,6 +164,46 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void scheduleEmotionEngineJob() {
         EmotionEngineService.scheduleEmotionEngineJob(this);
+    }
+
+    private void updateCreatureEmotion(Creature creature) {
+        Log.d(TAG, "Updating creature emotion...");
+        int emotion = creature.getEmotion();
+
+        // TODO verificar antes a personalidade
+
+        switch (emotion) {
+            case AppraisalConstants.EMOTION_FEAR:
+                mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+                break;
+            case AppraisalConstants.EMOTION_JOY:
+                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                break;
+            case AppraisalConstants.EMOTION_SADNESS:
+                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                break;
+            case AppraisalConstants.EMOTION_DISGUST:
+                mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
+                break;
+            case AppraisalConstants.EMOTION_ANGER:
+                mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
+                break;
+            case AppraisalConstants.EMOTION_SATISFACTION:
+                mCreatureImageView.setImageResource(R.drawable.extrov_animado);
+                break;
+            case AppraisalConstants.EMOTION_DISTRESS:
+                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                break;
+            case AppraisalConstants.EMOTION_GRATITUDE:
+                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                break;
+            case AppraisalConstants.EMOTION_NEUTRAL:
+                mCreatureImageView.setImageResource(R.drawable.extrov_neutro);
+                break;
+            case AppraisalConstants.EMOTION_BORED:
+                mCreatureImageView.setImageResource(R.drawable.extrov_entendiado);
+                break;
+        }
     }
 
     public void startSpeechRecognizer(View view) {

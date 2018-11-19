@@ -7,13 +7,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
+import br.com.ia369.bichinhovirtual.model.Creature;
 import br.com.ia369.bichinhovirtual.model.EmotionVariables;
 
-@Database(entities = {EmotionVariables.class}, version = 1)
-abstract class EmotionRoomDatabase extends RoomDatabase {
+@Database(entities = {EmotionVariables.class, Creature.class}, version = 1)
+public abstract class EmotionRoomDatabase extends RoomDatabase {
 
     private static final String TAG = EmotionRoomDatabase.class.getSimpleName();
 
@@ -55,6 +55,22 @@ abstract class EmotionRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(final Void... params) {
+
+            Creature creature = new Creature();
+            creature.setPersonality(AppraisalConstants.PERSONALITY_EXTROVERT);
+            creature.setEmotion(AppraisalConstants.EMOTION_NEUTRAL);
+            creature.setIntensity(5.0);
+            creature.setDecayFactor(0.5);
+            creature.setDispositionTimeStart(8);
+            creature.setDispositionTimeEnd(18);
+
+            String weatherPreference =
+                    String.valueOf(AppraisalConstants.INPUT_FORECAST_GOOD) +
+                    "," +
+                    AppraisalConstants.INPUT_FORECAST_RAIN;
+            creature.setWeatherPreference(weatherPreference);
+
+            mDao.insertCreature(creature);
 
             EmotionVariables emotionVariablesExt1 = new EmotionVariables();
             emotionVariablesExt1.setPersonality(AppraisalConstants.PERSONALITY_EXTROVERT);
