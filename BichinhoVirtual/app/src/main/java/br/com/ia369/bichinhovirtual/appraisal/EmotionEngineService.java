@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,6 +14,8 @@ import android.util.Log;
 import com.occ.entities.Emotion;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.ia369.bichinhovirtual.model.Creature;
 import br.com.ia369.bichinhovirtual.model.EmotionVariables;
@@ -47,21 +48,11 @@ public class EmotionEngineService extends Service {
                 String action = intent.getAction();
                 if(action != null) {
                     switch (action) {
-                        case AppraisalConstants.INPUT_FACE_POSITIVE_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_FACE_NEGATIVE_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TEXT_ANGRY_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TEXT_DISGUST_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TEXT_FEAR_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TEXT_JOY_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_TEXT_SADNESS_ACTION:
-                            break;
-                        case AppraisalConstants.INPUT_PROXIMITY_SENSOR_ACTION:
+                        case AppraisalConstants.ACTIVE_INPUT_ACTION:
+                            int inputType = intent.getIntExtra(AppraisalConstants.INPUT_TYPE_EXTRA, -1);
+                            if(inputType > 0) {
+                                new AppraiseActiveInputAsyncTask(this).execute(inputType);
+                            }
                             break;
                         case AppraisalConstants.INPUT_TIME_DISPOSED_ACTION:
                             break;
@@ -79,7 +70,6 @@ public class EmotionEngineService extends Service {
                             break;
                         case AppraisalConstants.INPUT_FORECAST_RAIN_ACTION:
                             break;
-
                     }
                 }
             }
@@ -87,7 +77,6 @@ public class EmotionEngineService extends Service {
 
         return super.onStartCommand(intent, flags, startId);
     }
-
 
     // FIXME alarmManager nao funciona em doze mode
     public static void scheduleEmotionEngineJob(Context context) {
@@ -116,6 +105,7 @@ public class EmotionEngineService extends Service {
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.d(TAG, "Appraising passive inputs...");
 
             EmotionEngineService emotionEngineService = emotionEngineServiceWeakReference.get();
             Application application = emotionEngineService.getApplication();
@@ -125,6 +115,8 @@ public class EmotionEngineService extends Service {
 
             Creature creature = repository.getCreature();
             emotionEngineService.decayEmotionIntensity(creature);
+
+            Log.d(TAG, "[passive] emotion = "+creature.getEmotion());
             repository.updateCreature(creature);
 
 //            EmotionVariables emotionVariables = repository.getEmotionVariable(AppraisalConstants.PERSONALITY_EXTROVERT, AppraisalConstants.INPUT_TEXT_JOY);
@@ -132,6 +124,43 @@ public class EmotionEngineService extends Service {
 //            if(emotionVariables != null) {
 //                emotionEngineService.appraiseEmotions(emotionVariables);
 //            }
+
+            return null;
+        }
+    }
+
+    static class AppraiseActiveInputAsyncTask extends AsyncTask<Integer, Void, Void> {
+        WeakReference<EmotionEngineService> emotionEngineServiceWeakReference;
+
+        AppraiseActiveInputAsyncTask(EmotionEngineService instance) {
+            this.emotionEngineServiceWeakReference = new WeakReference<>(instance);
+        }
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+            Log.d(TAG, "Appraising active inputs...");
+
+            int inputAction = params[0];
+
+            EmotionEngineService emotionEngineService = emotionEngineServiceWeakReference.get();
+            Application application = emotionEngineService.getApplication();
+            EmotionRepository repository = new EmotionRepository(application);
+
+            Creature creature = repository.getCreature();
+
+            EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), inputAction);
+
+            if(emotionVariables != null) {
+                Emotion newEmotion = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                if(newEmotion != null) {
+                    Log.d(TAG, "New emotion = "+newEmotion.getName());
+                    creature.setEmotion(Appraisal.getEmotionIdByName(newEmotion.getName()));
+                    creature.setIntensity(newEmotion.getIntensity());
+
+                    Log.d(TAG, "[active] emotion = "+creature.getEmotion());
+                    repository.updateCreature(creature);
+                }
+            }
 
             return null;
         }
@@ -165,10 +194,14 @@ public class EmotionEngineService extends Service {
         creature.setIntensity(emotionNewIntensity);
     }
 
-    private void appraiseEmotions(EmotionVariables emotionVariables) {
+    private Emotion appraiseNewEmotion(EmotionVariables emotionVariables) {
+
+        List<Emotion> emotionList = new ArrayList<>();
+
         Emotion fear = Appraisal.evaluateFear(emotionVariables);
         if(fear != null) {
             Log.d(TAG, "Fear intensity = "+fear.getIntensity());
+            emotionList.add(fear);
         } else {
             Log.d(TAG, "Not fear");
         }
@@ -176,6 +209,7 @@ public class EmotionEngineService extends Service {
         Emotion joy = Appraisal.evaluateJoy(emotionVariables);
         if(joy != null) {
             Log.d(TAG, "Joy intensity = "+joy.getIntensity());
+            emotionList.add(joy);
         } else {
             Log.d(TAG, "Not joy");
         }
@@ -183,6 +217,7 @@ public class EmotionEngineService extends Service {
         Emotion sadness = Appraisal.evaluateSadness(emotionVariables);
         if(sadness != null) {
             Log.d(TAG, "Sadness intensity = "+sadness.getIntensity());
+            emotionList.add(sadness);
         } else {
             Log.d(TAG, "Not sadness");
         }
@@ -190,6 +225,7 @@ public class EmotionEngineService extends Service {
         Emotion disgust = Appraisal.evaluateReproach(emotionVariables);
         if(disgust != null) {
             Log.d(TAG, "Disgust intensity = "+disgust.getIntensity());
+            emotionList.add(disgust);
         } else {
             Log.d(TAG, "Not disgust");
         }
@@ -197,6 +233,7 @@ public class EmotionEngineService extends Service {
         Emotion anger = Appraisal.evaluateAnger(emotionVariables);
         if(anger != null) {
             Log.d(TAG, "Anger intensity = "+anger.getIntensity());
+            emotionList.add(anger);
         } else {
             Log.d(TAG, "Not anger");
         }
@@ -204,6 +241,7 @@ public class EmotionEngineService extends Service {
         Emotion satisfaction = Appraisal.evaluateSatisfaction(emotionVariables);
         if(satisfaction != null) {
             Log.d(TAG, "Satisfaction intensity = "+satisfaction.getIntensity());
+            emotionList.add(satisfaction);
         } else {
             Log.d(TAG, "Not satisfaction");
         }
@@ -211,6 +249,7 @@ public class EmotionEngineService extends Service {
         Emotion distress = Appraisal.evaluateDistress(emotionVariables);
         if(distress != null) {
             Log.d(TAG, "Distress intensity = "+distress.getIntensity());
+            emotionList.add(distress);
         } else {
             Log.d(TAG, "Not distress");
         }
@@ -218,8 +257,29 @@ public class EmotionEngineService extends Service {
         Emotion gratitude = Appraisal.evaluateGratitude(emotionVariables);
         if(gratitude != null) {
             Log.d(TAG, "Gratitude intensity = "+gratitude.getIntensity());
+            emotionList.add(gratitude);
         } else {
             Log.d(TAG, "Not gratitude");
         }
+
+        if(emotionList.size() == 1) {
+            return emotionList.get(0);
+        } else if(emotionList.size() > 1) {
+            // Seleciona a emocao com maior intensidade
+
+            Emotion moreIntenseEmotion = null;
+            double currIntensity = -1;
+            for (int i = 0; i < emotionList.size(); i++) {
+                Emotion emotion = emotionList.get(i);
+                if(emotion.getIntensity() > currIntensity) {
+                    moreIntenseEmotion = emotion;
+                    currIntensity = emotion.getIntensity();
+                }
+            }
+
+            return moreIntenseEmotion;
+        }
+
+        return null;
     }
 }

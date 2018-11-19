@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
 
-    private CreatureViewModel mCreatureViewModel;
     private Creature mCreature;
 
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
@@ -122,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
 
-        mCreatureViewModel = ViewModelProviders.of(this).get(CreatureViewModel.class);
+        CreatureViewModel mCreatureViewModel = ViewModelProviders.of(this).get(CreatureViewModel.class);
         mCreatureViewModel.getCreature().observe(this, new Observer<Creature>() {
             @Override
             public void onChanged(@Nullable Creature creature) {
@@ -201,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 mCreatureImageView.setImageResource(R.drawable.extrov_neutro);
                 break;
             case AppraisalConstants.EMOTION_BORED:
-                mCreatureImageView.setImageResource(R.drawable.extrov_entendiado);
+                mCreatureImageView.setImageResource(R.drawable.extrov_entediado);
                 break;
         }
     }
@@ -410,23 +409,26 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         }
 
+        Intent intent = new Intent(this, EmotionEngineService.class);
+        intent.setAction(AppraisalConstants.ACTIVE_INPUT_ACTION);
         switch (relevantEmotionIndex) {
             case 0: // sadness
-                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_SADNESS);
                 break;
             case 1: // joy
-                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_JOY);
                 break;
             case 2: // fear
-                mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_FEAR);
                 break;
             case 3: // disgust
-                mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
+                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_DISGUST);
                 break;
             case 4: // anger
-                mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
+                intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_ANGER);
                 break;
         }
+        startService(intent);
 
         dismissProgressView();
     }

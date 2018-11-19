@@ -1,5 +1,7 @@
 package br.com.ia369.bichinhovirtual.appraisal;
 
+import android.support.annotation.NonNull;
+
 import com.occ.common.Evaluator;
 import com.occ.common.VariableType;
 import com.occ.entities.Emotion;
@@ -296,5 +298,31 @@ class Appraisal {
         }
 
         return null;
+    }
+
+    public static int getEmotionIdByName(@NonNull String name) {
+        switch (name) {
+            case "Fear":
+                return AppraisalConstants.EMOTION_FEAR;
+            case "Joy":
+                return AppraisalConstants.EMOTION_JOY;
+            case "Distress":
+                return AppraisalConstants.EMOTION_DISTRESS;
+            case "Disgust":
+                return AppraisalConstants.EMOTION_DISGUST;
+            case "Anger":
+                return AppraisalConstants.EMOTION_ANGER;
+            case "Bored":
+                return AppraisalConstants.EMOTION_BORED;
+            case "Neutral":
+                return AppraisalConstants.EMOTION_NEUTRAL;
+            case "Sadness":
+                return AppraisalConstants.EMOTION_SADNESS;
+            case "Gratitude":
+                return AppraisalConstants.EMOTION_GRATITUDE;
+            case "Satisfaction":
+                return AppraisalConstants.EMOTION_SATISFACTION;
+        }
+        return -1;
     }
 }

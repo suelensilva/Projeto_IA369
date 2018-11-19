@@ -22,7 +22,7 @@ public class AppraisalConstants {
     public static final int INPUT_TEXT_JOY = 203;
     public static final int INPUT_TEXT_FEAR = 204;
     public static final int INPUT_TEXT_DISGUST = 205;
-    public static final int INPUT_TEXT_ANGRY = 206;
+    public static final int INPUT_TEXT_ANGER = 206;
     public static final int INPUT_PROXIMITY_SENSOR = 207;
     public static final int INPUT_FORECAST_RAIN = 208;
     public static final int INPUT_FORECAST_COLD = 209;
@@ -33,14 +33,19 @@ public class AppraisalConstants {
     public static final int INPUT_LOCATION_IDLE = 214;
     public static final int INPUT_LOCATION_MOVING = 215;
 
-    public static final String INPUT_FACE_POSITIVE_ACTION = "face_positive";
-    public static final String INPUT_FACE_NEGATIVE_ACTION = "face_negative";
-    public static final String INPUT_TEXT_SADNESS_ACTION = "text_sadness";
-    public static final String INPUT_TEXT_JOY_ACTION = "text_joy";
-    public static final String INPUT_TEXT_FEAR_ACTION = "text_fear";
-    public static final String INPUT_TEXT_DISGUST_ACTION = "text_disgust";
-    public static final String INPUT_TEXT_ANGRY_ACTION = "text_angry";
-    public static final String INPUT_PROXIMITY_SENSOR_ACTION = "proximity_sensor";
+    public static final String ACTIVE_INPUT_ACTION = "active_input";
+    public static final String PASSIVE_INPUT_ACTION = "passive_input";
+
+    public static final String INPUT_TYPE_EXTRA = "input_type";
+
+//    public static final String INPUT_FACE_POSITIVE_ACTION = "face_positive";
+//    public static final String INPUT_FACE_NEGATIVE_ACTION = "face_negative";
+//    public static final String INPUT_TEXT_SADNESS_ACTION = "text_sadness";
+//    public static final String INPUT_TEXT_JOY_ACTION = "text_joy";
+//    public static final String INPUT_TEXT_FEAR_ACTION = "text_fear";
+//    public static final String INPUT_TEXT_DISGUST_ACTION = "text_disgust";
+//    public static final String INPUT_TEXT_ANGRY_ACTION = "text_angry";
+//    public static final String INPUT_PROXIMITY_SENSOR_ACTION = "proximity_sensor";
     public static final String INPUT_FORECAST_RAIN_ACTION = "forecast_rain";
     public static final String INPUT_FORECAST_COLD_ACTION = "forecast_cold";
     public static final String INPUT_FORECAST_HOT_ACTION = "forecast_hot";

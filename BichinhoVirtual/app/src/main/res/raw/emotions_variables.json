@@ -1,0 +1,311 @@
+[
+  {
+    "personality": 100,
+    "input": 200,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 2.0,
+    "desirability": 1.0
+  },
+  {
+    "personality": 100,
+    "input": 201,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": -0.5
+  },
+  {
+    "personality": 100,
+    "input": 202,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": -0.5
+  },
+  {
+    "personality": 100,
+    "input": 203,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": 1.0
+  },
+  {
+    "personality": 100,
+    "input": 204,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": -0.3,
+    "likelihood": 0.5
+  },
+  {
+    "personality": 100,
+    "input": 205,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "praiseworthiness": -0.5,
+    "expectationDeviation": 0.5
+  },
+  {
+    "personality": 100,
+    "input": 206,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "desirability": -0.5,
+    "praiseworthiness": -0.5,
+    "expectationDeviation": 0.5
+  },
+  {
+    "personality": 100,
+    "input": 207,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.6,
+    "desirability": -0.5,
+    "likelihood": 0.5
+  },
+  {
+    "personality": 100,
+    "input": 208,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.3,
+    "desirability": -0.5
+  },
+  {
+    "personality": 100,
+    "input": 209,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.3,
+    "desirability": -0.5
+  },
+  {
+    "personality": 100,
+    "input": 210,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.9,
+    "desirability": 1.0,
+    "likelihood": 0.5,
+    "realization": 1.0,
+    "effort": 0.1
+  },
+  {
+    "personality": 100,
+    "input": 211,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.2,
+    "desirability": 0.7
+  },
+  {
+    "personality": 100,
+    "input": 212,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": 0.5
+  },
+  {
+    "personality": 100,
+    "input": 213,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.1,
+    "desirability": -0.5
+  },
+  {
+    "personality": 100,
+    "input": 214,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.3,
+    "desirability": -0.2
+  },
+  {
+    "personality": 100,
+    "input": 215,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "desirability": 0.5,
+    "praiseworthiness": 0.5,
+    "expectationDeviation": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 200,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": 1.0
+  },
+  {
+    "personality": 101,
+    "input": 201,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": -0.7
+  },
+  {
+    "personality": 101,
+    "input": 202,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": -0.5
+  },
+  {
+    "personality": 101,
+    "input": 203,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": 1.0
+  },
+  {
+    "personality": 101,
+    "input": 204,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "desirability": -0.7,
+    "likelihood": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 205,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "praiseworthiness": -0.5,
+    "expectationDeviation": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 206,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": -0.7,
+    "likelihood": 0.3
+  },
+  {
+    "personality": 101,
+    "input": 207,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 2.0,
+    "arousal": 1.5,
+    "desirability": -2.0,
+    "likelihood": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 208,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.5,
+    "desirability": 1.0,
+    "likelihood": 0.5,
+    "realization": 1.0,
+    "effort": 0.1
+  },
+  {
+    "personality": 101,
+    "input": 209,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.2,
+    "desirability": 0.7
+  },
+  {
+    "personality": 101,
+    "input": 210,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.3,
+    "desirability": -0.7
+  },
+  {
+    "personality": 101,
+    "input": 211,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.9,
+    "desirability": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 212,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 213,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.1,
+    "desirability": -0.5
+  },
+  {
+    "personality": 101,
+    "input": 214,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.5,
+    "desirability": 0.5,
+    "praiseworthines": 0.5,
+    "expectationDeviation": 0.5
+  },
+  {
+    "personality": 101,
+    "input": 215,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.3,
+    "desirability": -0.5
+  }
+]
+
+
