@@ -101,6 +101,22 @@ public class EmotionEngineService extends Service {
         }
     }
 
+    private void updateCreatureWithNewEmotion(Creature creature, Emotion newEmotion) {
+        int emotionId = Appraisal.getEmotionIdByName(newEmotion.getName());
+
+        if(emotionId != creature.getEmotion()) {
+            if(newEmotion.getIntensity() >= creature.getIntensity()) {
+                creature.setEmotion(emotionId);
+                creature.setIntensity(newEmotion.getIntensity());
+            } else {
+                double newIntensity = creature.getIntensity() - newEmotion.getIntensity();
+                creature.setIntensity(newIntensity);
+            }
+        } else {
+            creature.setIntensity(newEmotion.getIntensity());
+        }
+    }
+
     static class DecayEmotionAsyncTask extends AsyncTask<Void, Void, Void> {
         WeakReference<EmotionEngineService> emotionEngineServiceWeakReference;
 
@@ -213,9 +229,9 @@ public class EmotionEngineService extends Service {
 
             Emotion moreIntensePassiveEmotion = emotionEngineService.getMoreIntenseEmotionFromList(passiveEmotionList);
             if(moreIntensePassiveEmotion != null) {
+
                 Log.d(TAG, "New passive emotion = "+moreIntensePassiveEmotion.getName());
-                creature.setEmotion(Appraisal.getEmotionIdByName(moreIntensePassiveEmotion.getName()));
-                creature.setIntensity(moreIntensePassiveEmotion.getIntensity());
+                emotionEngineService.updateCreatureWithNewEmotion(creature, moreIntensePassiveEmotion);
 
                 Log.d(TAG, "[passive] emotion = "+creature.getEmotion());
                 repository.updateCreature(creature);
@@ -249,8 +265,7 @@ public class EmotionEngineService extends Service {
                 Emotion newEmotion = emotionEngineService.appraiseNewEmotion(emotionVariables);
                 if(newEmotion != null) {
                     Log.d(TAG, "New emotion = "+newEmotion.getName());
-                    creature.setEmotion(Appraisal.getEmotionIdByName(newEmotion.getName()));
-                    creature.setIntensity(newEmotion.getIntensity());
+                    emotionEngineService.updateCreatureWithNewEmotion(creature, newEmotion);
 
                     Log.d(TAG, "[active] emotion = "+creature.getEmotion());
                     repository.updateCreature(creature);

@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
 
-    private Creature mCreature;
-
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -125,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mCreatureViewModel.getCreature().observe(this, new Observer<Creature>() {
             @Override
             public void onChanged(@Nullable Creature creature) {
-                mCreature = creature;
                 if (creature != null) {
                     updateCreatureEmotion(creature);
                 }
@@ -279,12 +276,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onEndOfSpeech() {
-
+        Log.d(TAG, "onEndOfSpeech");
     }
 
     @Override
     public void onError(int i) {
-
+        Log.d(TAG, "onError "+i);
     }
 
     @Override
