@@ -145,9 +145,7 @@ public class EmotionEngineService extends Service {
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(emotionEngineService);
 
-            Emotion emotionFromTime;
-            Emotion emotionFromWeather;
-            Emotion emotionFromLocation;
+            List<Emotion> passiveEmotionList = new ArrayList<>();
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -161,9 +159,10 @@ public class EmotionEngineService extends Service {
                 if(lastDispositionResult != inputAction) {
                     EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), inputAction);
                     if (emotionVariables != null) {
-                        emotionFromTime = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                        Emotion emotionFromTime = emotionEngineService.appraiseNewEmotion(emotionVariables);
                         if (emotionFromTime != null) {
                             Log.d(TAG, "New emotion from time = " + emotionFromTime.getName());
+                            passiveEmotionList.add(emotionFromTime);
                         }
                     }
 
@@ -181,9 +180,10 @@ public class EmotionEngineService extends Service {
             if(lastWeatherResult != weatherConditions) {
                 EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), weatherConditions);
                 if (emotionVariables != null) {
-                    emotionFromWeather = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                    Emotion emotionFromWeather = emotionEngineService.appraiseNewEmotion(emotionVariables);
                     if (emotionFromWeather != null) {
                         Log.d(TAG, "New emotion from weather = " + emotionFromWeather.getName());
+                        passiveEmotionList.add(emotionFromWeather);
                     }
                 }
 
@@ -199,9 +199,10 @@ public class EmotionEngineService extends Service {
             if(lastMovingStatus != movingStatus) {
                 EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), movingStatus);
                 if (emotionVariables != null) {
-                    emotionFromLocation = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                    Emotion emotionFromLocation = emotionEngineService.appraiseNewEmotion(emotionVariables);
                     if (emotionFromLocation != null) {
                         Log.d(TAG, "New emotion from location = " + emotionFromLocation.getName());
+                        passiveEmotionList.add(emotionFromLocation);
                     }
                 }
 
@@ -210,6 +211,15 @@ public class EmotionEngineService extends Service {
                 editor.apply();
             }
 
+            Emotion moreIntensePassiveEmotion = emotionEngineService.getMoreIntenseEmotionFromList(passiveEmotionList);
+            if(moreIntensePassiveEmotion != null) {
+                Log.d(TAG, "New passive emotion = "+moreIntensePassiveEmotion.getName());
+                creature.setEmotion(Appraisal.getEmotionIdByName(moreIntensePassiveEmotion.getName()));
+                creature.setIntensity(moreIntensePassiveEmotion.getIntensity());
+
+                Log.d(TAG, "[passive] emotion = "+creature.getEmotion());
+                repository.updateCreature(creature);
+            }
             return null;
         }
     }
@@ -358,6 +368,10 @@ public class EmotionEngineService extends Service {
             Log.d(TAG, "Not gratitude");
         }
 
+        return getMoreIntenseEmotionFromList(emotionList);
+    }
+
+    private Emotion getMoreIntenseEmotionFromList(List<Emotion> emotionList) {
         if(emotionList.size() == 1) {
             return emotionList.get(0);
         } else if(emotionList.size() > 1) {
@@ -375,7 +389,6 @@ public class EmotionEngineService extends Service {
 
             return moreIntenseEmotion;
         }
-
         return null;
     }
 
