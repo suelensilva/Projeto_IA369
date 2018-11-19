@@ -38,14 +38,6 @@ public class AppraisalConstants {
 
     public static final String INPUT_TYPE_EXTRA = "input_type";
 
-//    public static final String INPUT_FACE_POSITIVE_ACTION = "face_positive";
-//    public static final String INPUT_FACE_NEGATIVE_ACTION = "face_negative";
-//    public static final String INPUT_TEXT_SADNESS_ACTION = "text_sadness";
-//    public static final String INPUT_TEXT_JOY_ACTION = "text_joy";
-//    public static final String INPUT_TEXT_FEAR_ACTION = "text_fear";
-//    public static final String INPUT_TEXT_DISGUST_ACTION = "text_disgust";
-//    public static final String INPUT_TEXT_ANGRY_ACTION = "text_angry";
-//    public static final String INPUT_PROXIMITY_SENSOR_ACTION = "proximity_sensor";
     public static final String INPUT_FORECAST_RAIN_ACTION = "forecast_rain";
     public static final String INPUT_FORECAST_COLD_ACTION = "forecast_cold";
     public static final String INPUT_FORECAST_HOT_ACTION = "forecast_hot";

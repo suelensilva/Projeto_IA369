@@ -2,13 +2,17 @@ package br.com.ia369.bichinhovirtual.appraisal;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.occ.entities.Emotion;
@@ -17,6 +21,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.ia369.bichinhovirtual.MainActivity;
+import br.com.ia369.bichinhovirtual.R;
 import br.com.ia369.bichinhovirtual.model.Creature;
 import br.com.ia369.bichinhovirtual.model.EmotionVariables;
 import br.com.ia369.bichinhovirtual.room.EmotionRepository;
@@ -29,11 +35,18 @@ public class EmotionEngineService extends Service {
 
     public static final int REQUEST_CODE = 42;
     public static final int INTERVAL_TIME = 10 * 1000; // TODO definir intervalo de tempo adequado
+    public static final int NOTIFICATION_ID = 3;
+    public static final String CHANNEL_ID = "bichinho_virtual";
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        createNotificationChannel();
     }
 
     @Override
@@ -169,29 +182,40 @@ public class EmotionEngineService extends Service {
     private void decayEmotionIntensity(Creature creature) {
         double decayFactor = creature.getDecayFactor();
         double emotionIntensity = creature.getIntensity();
-        int emotion = creature.getEmotion();
+        int currEmotion = creature.getEmotion();
+        int newEmotion = currEmotion;
 
-        double emotionNewIntensity = emotionIntensity-decayFactor > 0 ? emotionIntensity-decayFactor : 0.0;
-        if(emotionNewIntensity == 0.0) {
-            switch (emotion) {
+        double newEmotionIntensity = emotionIntensity-decayFactor > 0 ? emotionIntensity-decayFactor : 0.0;
+        if(newEmotionIntensity == 0.0) {
+            switch (currEmotion) {
                 case AppraisalConstants.EMOTION_NEUTRAL:
-                    emotion = AppraisalConstants.EMOTION_BORED;
+                    newEmotion = AppraisalConstants.EMOTION_BORED;
                     break;
                 case AppraisalConstants.EMOTION_BORED:
                     // continua entendiado
                     break;
                 default:
-                    emotion = AppraisalConstants.EMOTION_NEUTRAL;
-                    emotionNewIntensity = 5.0;
+                    newEmotion = AppraisalConstants.EMOTION_NEUTRAL;
+                    newEmotionIntensity = 5.0;
                     break;
             }
         }
 
-        Log.d(TAG, "Emotion = "+emotion);
-        Log.d(TAG, "Emotion intensity = "+emotionNewIntensity);
+        Log.d(TAG, "Emotion = "+newEmotion);
+        Log.d(TAG, "Emotion intensity = "+newEmotionIntensity);
 
-        creature.setEmotion(emotion);
-        creature.setIntensity(emotionNewIntensity);
+        if(newEmotion != currEmotion && newEmotion == AppraisalConstants.EMOTION_BORED) {
+            String message;
+            if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
+                message = "Como está meu humano favorito?";
+            } else {
+                message = "Oi??? Esqueceu que eu existo?";
+            }
+            createNotification(message);
+        }
+
+        creature.setEmotion(newEmotion);
+        creature.setIntensity(newEmotionIntensity);
     }
 
     private Emotion appraiseNewEmotion(EmotionVariables emotionVariables) {
@@ -281,5 +305,40 @@ public class EmotionEngineService extends Service {
         }
 
         return null;
+    }
+
+    private void createNotification(String message) {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(message)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        Notification notification = mBuilder.build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 }

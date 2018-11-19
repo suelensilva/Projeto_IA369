@@ -169,39 +169,72 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         Log.d(TAG, "Updating creature emotion...");
         int emotion = creature.getEmotion();
 
-        // TODO verificar antes a personalidade
-
-        switch (emotion) {
-            case AppraisalConstants.EMOTION_FEAR:
-                mCreatureImageView.setImageResource(R.drawable.extrov_medo);
-                break;
-            case AppraisalConstants.EMOTION_JOY:
-                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
-                break;
-            case AppraisalConstants.EMOTION_SADNESS:
-                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
-                break;
-            case AppraisalConstants.EMOTION_DISGUST:
-                mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
-                break;
-            case AppraisalConstants.EMOTION_ANGER:
-                mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
-                break;
-            case AppraisalConstants.EMOTION_SATISFACTION:
-                mCreatureImageView.setImageResource(R.drawable.extrov_animado);
-                break;
-            case AppraisalConstants.EMOTION_DISTRESS:
-                mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
-                break;
-            case AppraisalConstants.EMOTION_GRATITUDE:
-                mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
-                break;
-            case AppraisalConstants.EMOTION_NEUTRAL:
-                mCreatureImageView.setImageResource(R.drawable.extrov_neutro);
-                break;
-            case AppraisalConstants.EMOTION_BORED:
-                mCreatureImageView.setImageResource(R.drawable.extrov_entediado);
-                break;
+        if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
+            switch (emotion) {
+                case AppraisalConstants.EMOTION_FEAR:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_medo);
+                    break;
+                case AppraisalConstants.EMOTION_JOY:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                    break;
+                case AppraisalConstants.EMOTION_SADNESS:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_DISGUST:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
+                    break;
+                case AppraisalConstants.EMOTION_ANGER:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
+                    break;
+                case AppraisalConstants.EMOTION_SATISFACTION:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_animado);
+                    break;
+                case AppraisalConstants.EMOTION_DISTRESS:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_GRATITUDE:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
+                    break;
+                case AppraisalConstants.EMOTION_NEUTRAL:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_neutro);
+                    break;
+                case AppraisalConstants.EMOTION_BORED:
+                    mCreatureImageView.setImageResource(R.drawable.extrov_entediado);
+                    break;
+            }
+        } else if(creature.getPersonality() == AppraisalConstants.PERSONALITY_NEUROTIC){
+            switch (emotion) {
+                case AppraisalConstants.EMOTION_FEAR:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_medo);
+                    break;
+                case AppraisalConstants.EMOTION_JOY:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_felicidade);
+                    break;
+                case AppraisalConstants.EMOTION_SADNESS:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_DISGUST:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_nojo);
+                    break;
+                case AppraisalConstants.EMOTION_ANGER:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_raiva);
+                    break;
+                case AppraisalConstants.EMOTION_SATISFACTION:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_animado);
+                    break;
+                case AppraisalConstants.EMOTION_DISTRESS:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_GRATITUDE:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_felicidade);
+                    break;
+                case AppraisalConstants.EMOTION_NEUTRAL:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_neutro);
+                    break;
+                case AppraisalConstants.EMOTION_BORED:
+                    mCreatureImageView.setImageResource(R.drawable.neuro_entediado);
+                    break;
+            }
         }
     }
 
@@ -428,6 +461,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, AppraisalConstants.INPUT_TEXT_ANGER);
                 break;
         }
+
         startService(intent);
 
         dismissProgressView();
