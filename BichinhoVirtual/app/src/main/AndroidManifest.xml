@@ -13,20 +13,23 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:allowBackup="true">
-        <activity android:name=".MainActivity"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="br.com.ia369.bichinhovirtual.fileprovider"
@@ -36,8 +39,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <service
-            android:name=".appraisal.EmotionEngineService" />
+
+        <service android:name=".appraisal.EmotionEngineService" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/SettingsTheme"/>
     </application>
 
 </manifest>

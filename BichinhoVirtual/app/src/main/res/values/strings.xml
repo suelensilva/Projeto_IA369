@@ -27,4 +27,20 @@
 
     <string name="channel_name">Bichinho Virtual</string>
     <string name="channel_description">Bichinho Virtual</string>
+
+    <string name="title_activity_settings">Configurações</string>
+
+    <string-array name="forecast_entries">
+        <item>Bom</item>
+        <item>Frio</item>
+        <item>Calor</item>
+        <item>Chuva</item>
+    </string-array>
+
+    <string-array name="forecast_entries_values">
+        <item>211</item>
+        <item>209</item>
+        <item>210</item>
+        <item>208</item>
+    </string-array>
 </resources>

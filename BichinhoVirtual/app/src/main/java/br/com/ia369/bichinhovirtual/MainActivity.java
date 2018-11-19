@@ -238,6 +238,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
     }
 
+    public void openSettings(View view) {
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
     public void startSpeechRecognizer(View view) {
 
         mSentimentReportTextView.setVisibility(View.GONE);

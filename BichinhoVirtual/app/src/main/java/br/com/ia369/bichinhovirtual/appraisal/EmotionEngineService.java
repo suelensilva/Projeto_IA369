@@ -37,7 +37,6 @@ public class EmotionEngineService extends Service {
     private static final String INTERVAL_REQUEST = "interval_request";
 
     public static final int REQUEST_CODE = 42;
-    public static final int INTERVAL_TIME = 10 * 1000; // TODO definir intervalo de tempo adequado
     public static final int NOTIFICATION_ID = 3;
     public static final String CHANNEL_ID = "bichinho_virtual";
 
@@ -87,8 +86,12 @@ public class EmotionEngineService extends Service {
         emotionEngineServiceIntent.putExtra(INTERVAL_REQUEST, true);
         PendingIntent pendingIntent = PendingIntent.getService(context, REQUEST_CODE, emotionEngineServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String decayIntervalString = preferences.getString("decay_interval", "10");
+        int decayInterval = Integer.valueOf(decayIntervalString);
+
         long now = System.currentTimeMillis();
-        long triggerAt = now + INTERVAL_TIME;
+        long triggerAt = now + (decayInterval*1000);
 
         AlarmManager.AlarmClockInfo alarmClockInfo = new AlarmManager.AlarmClockInfo(triggerAt, null);
 
@@ -170,7 +173,8 @@ public class EmotionEngineService extends Service {
             }
 
 
-            int weatherConditions = sharedPreferences.getInt("weather_condition_prefs", AppraisalConstants.INPUT_FORECAST_GOOD);
+            String weatherConditionsString = sharedPreferences.getString("weather_condition_prefs", String.valueOf(AppraisalConstants.INPUT_FORECAST_GOOD));
+            int weatherConditions = Integer.valueOf(weatherConditionsString);
             int lastWeatherResult = sharedPreferences.getInt("last_weather_result", -1);
 
             if(lastWeatherResult != weatherConditions) {
@@ -247,7 +251,11 @@ public class EmotionEngineService extends Service {
     }
 
     private void decayEmotionIntensity(Creature creature) {
-        double decayFactor = creature.getDecayFactor();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String decayFactorString = preferences.getString("decay_factor", "0.5");
+        double decayFactor = Double.valueOf(decayFactorString);
+
         double emotionIntensity = creature.getIntensity();
         int currEmotion = creature.getEmotion();
         int newEmotion = currEmotion;

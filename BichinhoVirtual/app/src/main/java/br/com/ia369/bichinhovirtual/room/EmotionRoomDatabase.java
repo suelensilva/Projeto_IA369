@@ -76,15 +76,9 @@ public abstract class EmotionRoomDatabase extends RoomDatabase {
             creature.setPersonality(AppraisalConstants.PERSONALITY_EXTROVERT);
             creature.setEmotion(AppraisalConstants.EMOTION_NEUTRAL);
             creature.setIntensity(5.0);
-            creature.setDecayFactor(0.5);
-            creature.setDispositionTimeStart(8);
-            creature.setDispositionTimeEnd(18);
-
-            String weatherPreference =
-                    String.valueOf(AppraisalConstants.INPUT_FORECAST_GOOD) +
-                    "," +
-                    AppraisalConstants.INPUT_FORECAST_RAIN;
-            creature.setWeatherPreference(weatherPreference);
+//            creature.setDecayFactor(0.5);
+//            creature.setDispositionTimeStart(8);
+//            creature.setDispositionTimeEnd(18);
 
             mDao.insertCreature(creature);
 
