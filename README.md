@@ -12,3 +12,5 @@ Digitar aqui as ferramentas
 Digitar aqui como  usar
 ## Informações Adicionais
 ### Sugestões ou Contribuições:
+## Licença:
+link para o documento LICENSE.txt
