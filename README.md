@@ -14,4 +14,4 @@ Digitar aqui como  usar
 ### Sugestões ou Contribuições:
 Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
 ## Licença:
-link para o documento licença
+link para o documento para a licença
