@@ -57,4 +57,3 @@ Para entender como usa, por favor, consulte os testes escritos.
 Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
 ### Licença:
 
-### Colaboradores:
