@@ -23,7 +23,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
              * Humor
 
 # Começando
-## Uso:
+### Uso:
 Para entender como usa, por favor, consulte os testes escritos.
 ### Pré-requisitos
    * Descrever aqui
