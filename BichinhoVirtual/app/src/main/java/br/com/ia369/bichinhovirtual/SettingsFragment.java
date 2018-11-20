@@ -10,7 +10,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import java.lang.ref.WeakReference;
-import java.util.Set;
 
 import br.com.ia369.bichinhovirtual.model.Creature;
 import br.com.ia369.bichinhovirtual.room.EmotionRepository;
@@ -20,28 +19,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        setPreferencesFromResource(R.xml.preferences, rootKey);
+        setPreferencesFromResource(R.xml.preferences_screen, rootKey);
 
-        ListPreference personalityTypePreference = (ListPreference) findPreference("personality_type");
+        ListPreference personalityTypePreference = (ListPreference) findPreference(getString(R.string.personality_type_pref));
         personalityTypePreference.setSummary(personalityTypePreference.getEntry());
 
-        EditTextPreference decayIntervalPreference = (EditTextPreference) findPreference("decay_interval");
+        EditTextPreference decayIntervalPreference = (EditTextPreference) findPreference(getString(R.string.decay_interval_pref));
         decayIntervalPreference.setSummary(decayIntervalPreference.getText());
 
-        EditTextPreference decayFactorPreference = (EditTextPreference) findPreference("decay_factor");
+        EditTextPreference decayFactorPreference = (EditTextPreference) findPreference(getString(R.string.decay_factor_pref));
         decayFactorPreference.setSummary(decayFactorPreference.getText());
 
-        EditTextPreference dispositionTimeStartPreference = (EditTextPreference) findPreference("disposition_time_start");
+        EditTextPreference dispositionTimeStartPreference = (EditTextPreference) findPreference(getString(R.string.disposition_time_start_pref));
         dispositionTimeStartPreference.setSummary(dispositionTimeStartPreference.getText());
 
-        EditTextPreference dispositionTimeEndPreference = (EditTextPreference) findPreference("disposition_time_end");
+        EditTextPreference dispositionTimeEndPreference = (EditTextPreference) findPreference(getString(R.string.disposition_time_end_pref));
         dispositionTimeEndPreference.setSummary(dispositionTimeEndPreference.getText());
 
-        ListPreference weatherConditionPreference = (ListPreference) findPreference("weather_condition_prefs");
+        ListPreference weatherConditionPreference = (ListPreference) findPreference(getString(R.string.weather_condition_pref));
         weatherConditionPreference.setSummary(weatherConditionPreference.getEntry());
-
-        ListPreference personalityPreference = (ListPreference) findPreference("personality_type");
-        personalityPreference.setSummary(personalityPreference.getEntry());
     }
 
     @Override
@@ -71,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         if(preference instanceof ListPreference) {
             preference.setSummary(((ListPreference) preference).getEntry());
 
-            if(key.equals("personality_type")) {
+            if(key.equals(getString(R.string.personality_type_pref))) {
                 String newPersonalityString = ((ListPreference) preference).getValue();
                 new SaveNewPersonalityAsyncTask(this).execute(newPersonalityString);
             }

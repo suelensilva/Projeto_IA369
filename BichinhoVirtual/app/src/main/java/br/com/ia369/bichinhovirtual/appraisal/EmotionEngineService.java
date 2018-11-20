@@ -88,7 +88,9 @@ public class EmotionEngineService extends Service {
         PendingIntent pendingIntent = PendingIntent.getService(context, REQUEST_CODE, emotionEngineServiceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String decayIntervalString = preferences.getString("decay_interval", "10");
+
+        String decayIntervalPrefKey = context.getString(R.string.decay_interval_pref);
+        String decayIntervalString = preferences.getString(decayIntervalPrefKey, "10");
         int decayInterval = Integer.valueOf(decayIntervalString);
 
         long now = System.currentTimeMillis();
@@ -105,7 +107,10 @@ public class EmotionEngineService extends Service {
         int emotionId = Appraisal.getEmotionIdByName(newEmotion.getName());
 
         if(emotionId != creature.getEmotion()) {
-            if(newEmotion.getIntensity() >= creature.getIntensity()) {
+            if(newEmotion.getIntensity() >= creature.getIntensity() ||
+                    creature.getEmotion() == AppraisalConstants.EMOTION_NEUTRAL) {
+                // A nova emocao eh mais intensa que a atual, ou a atual eh neutra
+                // que eh suscetivel a qualquer nova emocao
                 creature.setEmotion(emotionId);
                 creature.setIntensity(newEmotion.getIntensity());
             } else {
@@ -167,31 +172,45 @@ public class EmotionEngineService extends Service {
             calendar.setTimeInMillis(System.currentTimeMillis());
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
-            if(hour >= creature.getDispositionTimeStart() && hour < creature.getDispositionTimeEnd()) {
-                int inputAction = AppraisalConstants.INPUT_TIME_DISPOSED;
+            String dispositionTimeStartPrefKey = emotionEngineService.getString(R.string.disposition_time_start_pref);
+            String dispositionTimeEndPrefKey = emotionEngineService.getString(R.string.disposition_time_end_pref);
+            String lastDispositionResultPrefKey = emotionEngineService.getString(R.string.last_disposition_result_pref);
 
-                int lastDispositionResult = sharedPreferences.getInt("last_disposition_result", -1);
+            String dispositionTimeStartString = sharedPreferences.getString(dispositionTimeStartPrefKey, "8");
+            String dispositionTimeEndString = sharedPreferences.getString(dispositionTimeEndPrefKey, "20");
 
-                if(lastDispositionResult != inputAction) {
-                    EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), inputAction);
-                    if (emotionVariables != null) {
-                        Emotion emotionFromTime = emotionEngineService.appraiseNewEmotion(emotionVariables);
-                        if (emotionFromTime != null) {
-                            Log.d(TAG, "New emotion from time = " + emotionFromTime.getName());
-                            passiveEmotionList.add(emotionFromTime);
-                        }
-                    }
+            int dispositionTimeStart = Integer.parseInt(dispositionTimeStartString);
+            int dispositionTimeEnd = Integer.parseInt(dispositionTimeEndString);
+            int lastDispositionResult = sharedPreferences.getInt(lastDispositionResultPrefKey, -1);
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("last_disposition_result", inputAction);
-                    editor.apply();
-                }
+            int inputAction;
+            if(hour >= dispositionTimeStart && hour < dispositionTimeEnd) {
+                inputAction = AppraisalConstants.INPUT_TIME_DISPOSED;
+            } else {
+                inputAction = AppraisalConstants.INPUT_TIME_INDISPOSED;
             }
 
+            if(lastDispositionResult != inputAction) {
+                EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), inputAction);
+                if (emotionVariables != null) {
+                    Emotion emotionFromTime = emotionEngineService.appraiseNewEmotion(emotionVariables);
+                    if (emotionFromTime != null) {
+                        Log.d(TAG, "New emotion from time = " + emotionFromTime.getName());
+                        passiveEmotionList.add(emotionFromTime);
+                    }
+                }
 
-            String weatherConditionsString = sharedPreferences.getString("weather_condition_prefs", String.valueOf(AppraisalConstants.INPUT_FORECAST_GOOD));
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(lastDispositionResultPrefKey, inputAction);
+                editor.apply();
+            }
+
+            String weatherConditionPrefKey = emotionEngineService.getString(R.string.weather_condition_pref);
+            String lastWeatherConditionPrefKey = emotionEngineService.getString(R.string.last_weather_condition_pref);
+
+            String weatherConditionsString = sharedPreferences.getString(weatherConditionPrefKey, String.valueOf(AppraisalConstants.INPUT_FORECAST_GOOD));
             int weatherConditions = Integer.valueOf(weatherConditionsString);
-            int lastWeatherResult = sharedPreferences.getInt("last_weather_result", -1);
+            int lastWeatherResult = sharedPreferences.getInt(lastWeatherConditionPrefKey, -1);
 
             if(lastWeatherResult != weatherConditions) {
                 EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), weatherConditions);
@@ -204,16 +223,19 @@ public class EmotionEngineService extends Service {
                 }
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("last_weather_result", weatherConditions);
+                editor.putInt(lastWeatherConditionPrefKey, weatherConditions);
                 editor.apply();
             }
 
+            String movingStatusPrefKey = emotionEngineService.getString(R.string.moving_status_pref);
+            String lastMovingStatusPrefKey = emotionEngineService.getString(R.string.last_moving_status_pref);
 
-            int movingStatus = sharedPreferences.getInt("moving_status_prefs", AppraisalConstants.INPUT_LOCATION_IDLE);
-            int lastMovingStatus = sharedPreferences.getInt("last_moving_status_result", -1);
+            boolean isMoving = sharedPreferences.getBoolean(movingStatusPrefKey, false);
+            boolean lastMovingStatus = sharedPreferences.getBoolean(lastMovingStatusPrefKey, false);
 
-            if(lastMovingStatus != movingStatus) {
-                EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), movingStatus);
+            if(lastMovingStatus != isMoving) {
+                int isMovingInput = isMoving ? AppraisalConstants.INPUT_LOCATION_MOVING : AppraisalConstants.INPUT_LOCATION_IDLE;
+                EmotionVariables emotionVariables = repository.getEmotionVariable(creature.getPersonality(), isMovingInput);
                 if (emotionVariables != null) {
                     Emotion emotionFromLocation = emotionEngineService.appraiseNewEmotion(emotionVariables);
                     if (emotionFromLocation != null) {
@@ -223,7 +245,7 @@ public class EmotionEngineService extends Service {
                 }
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("last_moving_status_result", movingStatus);
+                editor.putBoolean(lastMovingStatusPrefKey, isMoving);
                 editor.apply();
             }
 
@@ -279,7 +301,7 @@ public class EmotionEngineService extends Service {
     private void decayEmotionIntensity(Creature creature) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String decayFactorString = preferences.getString("decay_factor", "0.5");
+        String decayFactorString = preferences.getString(getString(R.string.decay_factor_pref), "0.5");
         double decayFactor = Double.valueOf(decayFactorString);
 
         double emotionIntensity = creature.getIntensity();
@@ -293,7 +315,7 @@ public class EmotionEngineService extends Service {
                     newEmotion = AppraisalConstants.EMOTION_BORED;
                     break;
                 case AppraisalConstants.EMOTION_BORED:
-                    // continua entendiado
+                    // continua entediado
                     break;
                 default:
                     newEmotion = AppraisalConstants.EMOTION_NEUTRAL;
@@ -387,9 +409,11 @@ public class EmotionEngineService extends Service {
     }
 
     private Emotion getMoreIntenseEmotionFromList(List<Emotion> emotionList) {
+
         if(emotionList.size() == 1) {
             return emotionList.get(0);
         } else if(emotionList.size() > 1) {
+
             // Seleciona a emocao com maior intensidade
 
             Emotion moreIntenseEmotion = null;

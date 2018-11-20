@@ -2,11 +2,11 @@
     <SwitchPreference
         android:defaultValue="false"
         android:title="Exibir log na tela principal."
-        android:key="show_log" />
+        android:key="@string/show_log_pref" />
 
     <ListPreference
         android:defaultValue="extrovert"
-        android:key="personality_type"
+        android:key="@string/personality_type_pref"
         android:title="Tipo de personalidade"
         android:entries="@array/creature_type_entries"
         android:entryValues="@array/creature_type_values"
@@ -15,34 +15,34 @@
     <EditTextPreference
         android:defaultValue="10"
         android:title="Intervalo de decaimento (segundos)"
-        android:key="decay_interval"
+        android:key="@string/decay_interval_pref"
         android:numeric="integer"
         android:summary="Intervalo de decaimento" />
 
     <EditTextPreference
         android:defaultValue="0.5"
         android:title="Taxa de decaimento"
-        android:key="decay_factor"
+        android:key="@string/decay_factor_pref"
         android:numeric="decimal"
         android:summary="Taxa de decaimento" />
 
     <EditTextPreference
         android:defaultValue="8"
         android:title="Início do horário de disposição"
-        android:key="disposition_time_start"
+        android:key="@string/disposition_time_start_pref"
         android:numeric="integer"
         android:summary="Início do horário de disposição" />
 
     <EditTextPreference
-        android:defaultValue="18"
+        android:defaultValue="20"
         android:title="Fim do horário de disposição"
-        android:key="disposition_time_end"
+        android:key="@string/disposition_time_end_pref"
         android:numeric="integer"
         android:summary="Fim do horário de disposição" />
 
     <ListPreference
         android:defaultValue="211"
-        android:key="weather_condition_prefs"
+        android:key="@string/weather_condition_pref"
         android:title="Previsão do tempo"
         android:entries="@array/forecast_entries"
         android:entryValues="@array/forecast_entries_values"
@@ -51,5 +51,5 @@
     <SwitchPreference
         android:defaultValue="false"
         android:title="Em movimento"
-        android:key="moving_status" />
+        android:key="@string/moving_status_pref" />
 </PreferenceScreen>

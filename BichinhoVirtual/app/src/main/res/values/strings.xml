@@ -65,4 +65,18 @@
         <item>Ninguém se importa comigo…</item>
         <item>Oh vida! Oh céus! Oh tédio!</item>
     </string-array>
+
+    <!-- Preferences -->
+    <string name="show_log_pref">show_log</string>
+    <string name="personality_type_pref">personality_type</string>
+    <string name="decay_interval_pref">decay_interval</string>
+    <string name="decay_factor_pref">decay_factor</string>
+    <string name="disposition_time_start_pref">disposition_time_start</string>
+    <string name="disposition_time_end_pref">disposition_time_end</string>
+    <string name="weather_condition_pref">weather_condition</string>
+    <string name="moving_status_pref">moving_status</string>
+
+    <string name="last_weather_condition_pref">last_weather_condition</string>
+    <string name="last_moving_status_pref">last_moving_status</string>
+    <string name="last_disposition_result_pref">last_disposition_result</string>
 </resources>
