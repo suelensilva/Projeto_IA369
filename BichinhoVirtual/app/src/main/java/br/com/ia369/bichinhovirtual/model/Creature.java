@@ -12,10 +12,6 @@ public class Creature {
     private int emotion;
     private int personality;
     private Double intensity;
-    private Double decayFactor;
-    private int dispositionTimeStart;
-    private int dispositionTimeEnd;
-    private String weatherPreference;
 
     public long getId() {
         return id;
@@ -47,37 +43,5 @@ public class Creature {
 
     public void setIntensity(Double intensity) {
         this.intensity = intensity;
-    }
-
-    public Double getDecayFactor() {
-        return decayFactor;
-    }
-
-    public void setDecayFactor(Double decayFactor) {
-        this.decayFactor = decayFactor;
-    }
-
-    public int getDispositionTimeStart() {
-        return dispositionTimeStart;
-    }
-
-    public void setDispositionTimeStart(int dispositionTimeStart) {
-        this.dispositionTimeStart = dispositionTimeStart;
-    }
-
-    public int getDispositionTimeEnd() {
-        return dispositionTimeEnd;
-    }
-
-    public void setDispositionTimeEnd(int dispositionTimeEnd) {
-        this.dispositionTimeEnd = dispositionTimeEnd;
-    }
-
-    public String getWeatherPreference() {
-        return weatherPreference;
-    }
-
-    public void setWeatherPreference(String weatherPreference) {
-        this.weatherPreference = weatherPreference;
     }
 }

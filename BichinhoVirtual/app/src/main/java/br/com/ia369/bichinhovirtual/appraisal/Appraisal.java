@@ -12,7 +12,7 @@ import com.occ.rules.infra.RulesBuilder;
 
 import br.com.ia369.bichinhovirtual.model.EmotionVariables;
 
-class Appraisal {
+public class Appraisal {
 
     private static final Double THRESHOLD = 0.3;
 
@@ -324,5 +324,31 @@ class Appraisal {
                 return AppraisalConstants.EMOTION_SATISFACTION;
         }
         return -1;
+    }
+
+    public static String getEmotionNameById(int id) {
+        switch (id) {
+            case AppraisalConstants.EMOTION_FEAR:
+                return "Fear";
+            case AppraisalConstants.EMOTION_JOY:
+                return "Joy";
+            case AppraisalConstants.EMOTION_DISTRESS:
+                return "Distress";
+            case AppraisalConstants.EMOTION_DISGUST:
+                return "Disgust";
+            case AppraisalConstants.EMOTION_ANGER:
+                return "Anger";
+            case AppraisalConstants.EMOTION_BORED:
+                return "Bored";
+            case AppraisalConstants.EMOTION_NEUTRAL:
+                return "Neutral";
+            case AppraisalConstants.EMOTION_SADNESS:
+                return "Sadness";
+            case AppraisalConstants.EMOTION_GRATITUDE:
+                return "Gratitude";
+            case AppraisalConstants.EMOTION_SATISFACTION:
+                return "Satisfaction";
+        }
+        return null;
     }
 }

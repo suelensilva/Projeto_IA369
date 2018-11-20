@@ -5,7 +5,7 @@
         android:key="@string/show_log_pref" />
 
     <ListPreference
-        android:defaultValue="extrovert"
+        android:defaultValue="100"
         android:key="@string/personality_type_pref"
         android:title="Tipo de personalidade"
         android:entries="@array/creature_type_entries"

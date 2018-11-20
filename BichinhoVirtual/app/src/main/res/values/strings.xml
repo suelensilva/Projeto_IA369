@@ -1,20 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Bichinho Virtual</string>
 
-    <string name="sentiment_report">
-        SENTIMENTO:\n
-        \tLabel: %1$s\n
-        \tScore: %2$s
-    </string>
-
-    <string name="emotion_report">
-        EMOÇÃO:\n
+    <string name="text_emotion_report">
+        Emoção no texto:\n
         \tSadness: %1$s\n
         \tJoy: %2$s\n
         \tFear: %3$s\n
         \tDisgust: %4$s\n
         \tAnger: %5$s\n
     </string>
+
+    <string name="face_emotion_report">
+        \n
+        Valência de emoção na face: %1$s
+    </string>
+
+    <string name="log_report">
+        \n
+        Emoção atual: %1$s\n
+        Intensidade: %2$f
+    </string>
+
     <string name="microfone">Microfone</string>
     <string name="camera">Câmera</string>
     <string name="settings">Configurações</string>

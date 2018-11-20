@@ -4,6 +4,7 @@ import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -48,6 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.ia369.bichinhovirtual.appraisal.Appraisal;
 import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
 import br.com.ia369.bichinhovirtual.appraisal.EmotionEngineService;
 import br.com.ia369.bichinhovirtual.model.Creature;
@@ -79,9 +82,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private static final double SMILING_PROB_THRESHOLD = .15;
 
     private View mRootView;
-    private TextView mTextView;
-    private TextView mSentimentReportTextView;
-    private TextView mEmotionReportTextView;
+    private TextView mLogTextView;
+    private TextView mDetailsReportTextView;
     private EditText mEditText;
     private ImageView mCreatureImageView;
     private SpeechRecognizer speechRecognizer;
@@ -91,8 +93,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private SensorManager mSensorManager;
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
-
-    private Creature mCreature;
 
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -116,9 +116,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         setContentView(R.layout.activity_main);
 
         mRootView = findViewById(R.id.root_view);
-        mTextView = findViewById(R.id.sample_text);
-        mSentimentReportTextView = findViewById(R.id.sentiment_report_text);
-        mEmotionReportTextView = findViewById(R.id.emotion_report_text);
+        mLogTextView = findViewById(R.id.log_text);
+        mDetailsReportTextView = findViewById(R.id.emotion_report_text);
         mEditText = findViewById(R.id.input_edit_text);
         mEditText.setOnEditorActionListener(mOnEditorActionListener);
         mCreatureImageView = findViewById(R.id.creature);
@@ -157,6 +156,17 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean showLog = preferences.getBoolean(getString(R.string.show_log_pref), false);
+
+        if(showLog) {
+            mLogTextView.setVisibility(View.VISIBLE);
+            mDetailsReportTextView.setVisibility(View.VISIBLE);
+        } else {
+            mLogTextView.setVisibility(View.GONE);
+            mDetailsReportTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -179,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         Log.d(TAG, "Updating creature emotion...");
 
         int emotion = creature.getEmotion();
+
+        String emotionString = Appraisal.getEmotionNameById(emotion);
+        String logReport = getString(R.string.log_report, emotionString, creature.getIntensity());
+        mLogTextView.setText(logReport);
 
         if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
 
@@ -204,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     mCreatureImageView.setImageResource(R.drawable.extrov_animado);
                     break;
                 case AppraisalConstants.EMOTION_DISTRESS:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
+                    mCreatureImageView.setImageResource(R.drawable.extrov_surpresa);
                     break;
                 case AppraisalConstants.EMOTION_GRATITUDE:
                     mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
@@ -240,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     mCreatureImageView.setImageResource(R.drawable.neuro_animado);
                     break;
                 case AppraisalConstants.EMOTION_DISTRESS:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_tristeza);
+                    mCreatureImageView.setImageResource(R.drawable.neuro_surpresa);
                     break;
                 case AppraisalConstants.EMOTION_GRATITUDE:
                     mCreatureImageView.setImageResource(R.drawable.neuro_felicidade);
@@ -253,12 +267,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     break;
             }
         }
-
-        // Atualiza a instancia do bichinho na activity
-        mCreature = creature;
     }
 
     public void openSettings(View view) {
+        mDetailsReportTextView.setText("");
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
@@ -278,9 +290,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void launchSpeechRecognizer() {
-        mSentimentReportTextView.setVisibility(View.GONE);
-        mEmotionReportTextView.setVisibility(View.GONE);
-
         showRecordingAudioView();
 
         Intent intent = new Intent
@@ -419,22 +428,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void parseNluResponse(ResponseBody responseBody) {
         try {
-            String sentimentReport;
             String emotionReport;
 
             JSONObject responseJsonObject = new JSONObject(responseBody.string());
-            JSONObject sentimentJsonObject = responseJsonObject.getJSONObject("sentiment");
-
-            if(sentimentJsonObject != null) {
-                JSONObject documentJsonObject = sentimentJsonObject.getJSONObject("document");
-                String score = String.valueOf(documentJsonObject.getDouble("score"));
-                String label = documentJsonObject.getString("label");
-
-                sentimentReport = getString(R.string.sentiment_report, label, score);
-
-                mSentimentReportTextView.setText(sentimentReport);
-                mSentimentReportTextView.setVisibility(View.VISIBLE);
-            }
             JSONObject emotionJsonObject = responseJsonObject.getJSONObject("emotion");
             if(emotionJsonObject != null) {
                 JSONObject documentJsonObject = emotionJsonObject.getJSONObject("document");
@@ -445,10 +441,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 String disgust = String.valueOf(innerEmotionJsonObject.getDouble("disgust"));
                 String anger = String.valueOf(innerEmotionJsonObject.getDouble("anger"));
 
-                emotionReport = getString(R.string.emotion_report, sadness, joy, fear, disgust, anger);
+                emotionReport = getString(R.string.text_emotion_report, sadness, joy, fear, disgust, anger);
 
-                mEmotionReportTextView.setText(emotionReport);
-                mEmotionReportTextView.setVisibility(View.VISIBLE);
+                mDetailsReportTextView.setText(emotionReport);
 
                 Double[] scores = new Double[] {
                         Double.parseDouble(sadness),
@@ -616,11 +611,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void showFaceResult(boolean isSmiling) {
+
+        String faceReportString;
         if(isSmiling) {
+            faceReportString = getString(R.string.face_emotion_report, "positiva");
             triggerInputAction(AppraisalConstants.INPUT_FACE_POSITIVE);
         } else {
+            faceReportString = getString(R.string.face_emotion_report, "negativa");
             triggerInputAction(AppraisalConstants.INPUT_FACE_NEGATIVE);
         }
+        mDetailsReportTextView.setText(faceReportString);
     }
 
     private boolean isSmiling(Bitmap picture) {
@@ -671,14 +671,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     private void setupIdDarkMode() {
-//        mCreatureImageView.setImageResource(R.drawable.extrov_medo);
-//        Appraisal appraisal = new Appraisal();
-//        try {
-//            double intensity = appraisal.evaluateFear();
-//            Log.d(TAG, "Fear intensity = "+intensity);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         triggerInputAction(AppraisalConstants.INPUT_PROXIMITY_SENSOR);
     }
 

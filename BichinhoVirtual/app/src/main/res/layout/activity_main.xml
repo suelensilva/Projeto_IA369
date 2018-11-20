@@ -23,40 +23,26 @@
         />
 
     <TextView
-        android:id="@+id/sample_text"
+        android:id="@+id/log_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/ubuntu"
+        android:layout_marginTop="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:visibility="gone"
+        android:gravity="start"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Este é um exemplo de texto que foi falado." />
-
-    <TextView
-        android:id="@+id/sentiment_report_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/sentiment_report"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/sample_text"
-        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/emotion_report_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        android:text="@string/emotion_report"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/sentiment_report_text"
+        app:layout_constraintTop_toBottomOf="@+id/log_text"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ImageView
