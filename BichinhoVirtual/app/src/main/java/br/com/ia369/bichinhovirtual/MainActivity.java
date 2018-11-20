@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mSentimentReportTextView.setVisibility(View.GONE);
         mEmotionReportTextView.setVisibility(View.GONE);
 
-        mTextView.setText(R.string.listening);
+        showRecordingAudioView();
 
         Intent intent = new Intent
                 (RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -313,22 +313,26 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onEndOfSpeech() {
-        Log.d(TAG, "onEndOfSpeech");
+        dismissRecordingAudioView();
     }
 
     @Override
     public void onError(int i) {
         Log.d(TAG, "onError "+i);
+        dismissRecordingAudioView();
     }
 
     @Override
     public void onResults(Bundle bundle) {
+
+        dismissProgressView();
+
         List<String> results = bundle.getStringArrayList
                     ("results_recognition");
         if(results != null) {
             String mAnswer = results.get(0);
-            mTextView.setText(mAnswer);
             translateToEnglish(mAnswer);
+            showProgressView();
         }
 
         speechRecognizer.stopListening();
@@ -342,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onEvent(int i, Bundle bundle) {
 
     }
-
 
     private void translateToEnglish(String portugueseText) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -371,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             @Override
             public void onFailure(@NonNull Call<TranslationResponse> call, @NonNull Throwable t) {
-
+                dismissProgressView();
             }
         });
     }
@@ -417,6 +420,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     Log.d(MainActivity.class.getSimpleName(), "Failure");
+                    dismissProgressView();
                 }
             });
         } catch (JSONException e) {
@@ -472,6 +476,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         mEditText.setText("");
+        dismissProgressView();
     }
 
     private void calculateMoreRelevantEmotionAndShowNewFace(Double[] emotionScores) {
@@ -509,8 +514,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         findViewById(R.id.progress).setVisibility(View.VISIBLE);
     }
 
+
     private void dismissProgressView() {
         findViewById(R.id.progress).setVisibility(View.GONE);
+    }
+
+    private void showRecordingAudioView() {
+        findViewById(R.id.recording_container).setVisibility(View.VISIBLE);
+    }
+
+
+    private void dismissRecordingAudioView() {
+        findViewById(R.id.recording_container).setVisibility(View.GONE);
     }
 
     public void analyzeFace(View view) {
