@@ -14,8 +14,9 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
      * Android Studio
   * Abordagens:
      * Modelo OCC
+         * Sintetiza emoções
      * Modelo Big Five
-         * Traços de Personalidade
+         * Personalidade
          * Humor
 
 ## Começando
