@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+def configPropertiesFile = rootProject.file("app/config.properties")
+
+// Carrega o config.properties
+def configProperties = new Properties()
+configProperties.load(new FileInputStream(configPropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -9,6 +15,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "YANDEX_KEY", configProperties['yandexKey']
+        buildConfigField "String", "IBM_NLU_SERVICE_USER", configProperties['ibmNluServiceUser']
+        buildConfigField "String", "IBM_NLU_SERVICE_PASSWORD", configProperties['ibmNluServicePassword']
     }
     buildTypes {
         release {

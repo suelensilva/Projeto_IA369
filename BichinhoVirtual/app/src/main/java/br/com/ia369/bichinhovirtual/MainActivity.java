@@ -292,24 +292,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     @Override
-    public void onReadyForSpeech(Bundle bundle) {
-
-    }
+    public void onReadyForSpeech(Bundle bundle) { }
 
     @Override
-    public void onBeginningOfSpeech() {
-
-    }
+    public void onBeginningOfSpeech() { }
 
     @Override
-    public void onRmsChanged(float v) {
-
-    }
+    public void onRmsChanged(float v) { }
 
     @Override
-    public void onBufferReceived(byte[] bytes) {
-
-    }
+    public void onBufferReceived(byte[] bytes) { }
 
     @Override
     public void onEndOfSpeech() {
@@ -339,25 +331,21 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     @Override
-    public void onPartialResults(Bundle bundle) {
-    }
+    public void onPartialResults(Bundle bundle) { }
 
     @Override
-    public void onEvent(int i, Bundle bundle) {
-
-    }
+    public void onEvent(int i, Bundle bundle) { }
 
     private void translateToEnglish(String portugueseText) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://translate.yandex.net/api/v1.5/tr.json/")
+                .baseUrl(getString(R.string.translate_service_endpoint))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         TranslateService service = retrofit.create(TranslateService.class);
         Map<String, String> queryMap = new HashMap<>();
 
-        // TODO remover string de key do versionamento
-        queryMap.put("key", "trnsl.1.1.20180930T235915Z.de076450d8e5aaf8.eb3477709ac41d3e9d7cac25568dff613f1b6270");
+        queryMap.put("key", BuildConfig.YANDEX_KEY);
         queryMap.put("lang", "pt-en");
         queryMap.put("text", portugueseText);
 
@@ -381,10 +369,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private void classifyEmotion(String text) {
 
-        // TODO remover username e password do versionamento
         IbmNluService ibmNluService = ServiceGenerator.createService(
                 IbmNluService.class,
-                "8eab499b-fe59-4e10-ac17-41b6ae981e53", "lUVcZ14sGgfb");
+                BuildConfig.IBM_NLU_SERVICE_USER,
+                BuildConfig.IBM_NLU_SERVICE_PASSWORD);
 
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("version", "2018-03-19");

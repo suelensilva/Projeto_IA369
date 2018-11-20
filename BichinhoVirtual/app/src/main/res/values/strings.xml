@@ -28,6 +28,8 @@
     <string name="channel_name">Bichinho Virtual</string>
     <string name="channel_description">Bichinho Virtual</string>
 
+    <string name="translate_service_endpoint">https://translate.yandex.net/api/v1.5/tr.json/</string>
+
     <string name="title_activity_settings">Configurações</string>
 
     <string-array name="creature_type_entries">
