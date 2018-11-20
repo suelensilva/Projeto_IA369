@@ -1,5 +1,7 @@
-# Projeto_IA369
-Repositório do projeto da disciplina IA369 - Computação Afetiva, oferecida no 2º semestre de 2018 pela Profa. Paula Dornhofer da FEEC/Unicamp.
+# Bichinho Virtual Afetivo 
+
+
+Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções do usuário e, a partir delas e de outros estímulos, sintetizar emoções na expressão facial do Bichinho de acordo com seu humor e personalidade.
 
 
 ![Exemplo de tela](BichinhoVirtual/screenshots/screenshot-1.png "Tela Principal")
