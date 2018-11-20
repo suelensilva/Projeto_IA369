@@ -12,6 +12,6 @@ Digitar aqui as ferramentas
 Digitar aqui como  usar
 ## Informações Adicionais
 ### Sugestões ou Contribuições:
-Consulte o arquivo contribuicao.md para verificar todas as formas de contribuições.
+Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
 ## Licença:
-link para o documento LICENSE.txt
+link para o documento licença
