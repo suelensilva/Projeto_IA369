@@ -9,8 +9,9 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
        * Através de Variáveis.
        * Motor de Processamento de Emoções (MPE)
 
-## Ferramentas e Metodologia Utilizadas:
-Digitar aqui as ferramentas
+## Ferramentas e Abordagens adotadas:
+* Plataforma Android.
+
 ## Começando
 ### Uso:
 Digitar aqui como  usar
