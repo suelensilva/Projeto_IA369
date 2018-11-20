@@ -30,6 +30,6 @@ Para entender como usa, por favor, consulte os testes escritos.
 ## Informações Adicionais
 ### Sugestões ou Contribuições:
 Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
-## Licença:
+### Licença:
 
-## Colaboradores:
+### Colaboradores:
