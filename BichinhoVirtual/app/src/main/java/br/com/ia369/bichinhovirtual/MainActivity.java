@@ -164,6 +164,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onPause();
     }
 
+    @Override
+    protected void onDestroy() {
+        speechRecognizer.destroy();
+        super.onDestroy();
+    }
+
     private void scheduleEmotionEngineJob() {
         EmotionEngineService.scheduleEmotionEngineJob(this);
     }
