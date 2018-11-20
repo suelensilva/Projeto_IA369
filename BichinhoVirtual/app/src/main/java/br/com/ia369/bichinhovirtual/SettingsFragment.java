@@ -39,6 +39,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         ListPreference weatherConditionPreference = (ListPreference) findPreference("weather_condition_prefs");
         weatherConditionPreference.setSummary(weatherConditionPreference.getEntry());
+
+        ListPreference personalityPreference = (ListPreference) findPreference("personality_type");
+        personalityPreference.setSummary(personalityPreference.getEntry());
     }
 
     @Override

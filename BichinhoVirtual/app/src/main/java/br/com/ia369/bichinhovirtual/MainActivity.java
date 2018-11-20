@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private static final double SMILING_PROB_THRESHOLD = .15;
 
+    private View mRootView;
     private TextView mTextView;
     private TextView mSentimentReportTextView;
     private TextView mEmotionReportTextView;
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private SensorManager mSensorManager;
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
+
+    private Creature mCreature;
 
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
@@ -108,7 +111,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+        mRootView = findViewById(R.id.root_view);
         mTextView = findViewById(R.id.sample_text);
         mSentimentReportTextView = findViewById(R.id.sentiment_report_text);
         mEmotionReportTextView = findViewById(R.id.emotion_report_text);
@@ -124,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onChanged(@Nullable Creature creature) {
                 if (creature != null) {
-                    updateCreatureEmotion(creature);
+                    updateCreature(creature);
                 }
             }
         });
@@ -162,11 +168,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         EmotionEngineService.scheduleEmotionEngineJob(this);
     }
 
-    private void updateCreatureEmotion(Creature creature) {
+    private void updateCreature(Creature creature) {
         Log.d(TAG, "Updating creature emotion...");
+
         int emotion = creature.getEmotion();
 
         if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
+
+            mRootView.setBackgroundResource(R.drawable.background);
+
             switch (emotion) {
                 case AppraisalConstants.EMOTION_FEAR:
                     mCreatureImageView.setImageResource(R.drawable.extrov_medo);
@@ -200,6 +210,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     break;
             }
         } else if(creature.getPersonality() == AppraisalConstants.PERSONALITY_NEUROTIC){
+
+            mRootView.setBackgroundResource(R.drawable.background2);
+
             switch (emotion) {
                 case AppraisalConstants.EMOTION_FEAR:
                     mCreatureImageView.setImageResource(R.drawable.neuro_medo);
@@ -233,6 +246,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     break;
             }
         }
+
+        // Atualiza a instancia do bichinho na activity
+        mCreature = creature;
     }
 
     public void openSettings(View view) {
