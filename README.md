@@ -5,7 +5,8 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
 
 ## Funcionalidades do Bichinho Virtual Afetivo:
    * Reconhecimento de emoções:
-       * Fala/Texto       
+       * Fala/Texto    
+       * Face
    * Síntese de emoções: 
        * Através de Variáveis
        * Motor de Processamento de Emoções (MPE)
