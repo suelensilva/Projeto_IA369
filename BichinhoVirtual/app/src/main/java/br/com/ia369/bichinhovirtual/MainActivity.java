@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 2;
 
     private static final String FILE_PROVIDER_AUTHORITY = "br.com.ia369.bichinhovirtual.fileprovider";
 
@@ -263,6 +264,20 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void startSpeechRecognizer(View view) {
 
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // If you do not have permission, request it
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    REQUEST_RECORD_AUDIO_PERMISSION);
+        } else {
+            launchSpeechRecognizer();
+        }
+    }
+
+    private void launchSpeechRecognizer() {
         mSentimentReportTextView.setVisibility(View.GONE);
         mEmotionReportTextView.setVisibility(View.GONE);
 
@@ -517,7 +532,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        // Called when you request permission to read and write to external storage
         switch (requestCode) {
             case REQUEST_STORAGE_PERMISSION: {
                 if (grantResults.length > 0
@@ -529,6 +543,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                 }
                 break;
+            }
+            case REQUEST_RECORD_AUDIO_PERMISSION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    launchSpeechRecognizer();
+                } else {
+                    Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
