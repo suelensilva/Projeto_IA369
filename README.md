@@ -37,8 +37,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
            * GNOME ou KDE Desktop.
            * Ubuntu ...      
            * Java 8
-           * 64 bits e processador Intel (emulador).
-          
+           * 64 bits e processador Intel (emulador)          
 ### Uso:
 Para entender como usa, por favor, consulte os testes escritos.
 ## Informações Adicionais
