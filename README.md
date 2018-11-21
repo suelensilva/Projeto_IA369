@@ -26,18 +26,8 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
 ## Começando
 ### Pré-Requisitos
    * Conceitos em Computação Afetiva
-   * Android Studio
-      * Windows:
-          * Java 8
-          * 64 bits e processador Intel (emulador)
-       * Mac
-           * Mac OS X 10.8.5 ou superior.           
-           * Java 6.
-        * Linux
-           * GNOME ou KDE Desktop.
-           * Ubuntu ...      
-           * Java 8
-           * 64 bits e processador Intel (emulador)          
+   * Android Studio    
+   * Java 8           
 ### Uso:
 Para entender como usa, por favor, consulte os testes escritos.
 ## Informações Adicionais
