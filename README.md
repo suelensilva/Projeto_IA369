@@ -38,4 +38,4 @@ Para entender como usa, por favor, consulte os testes escritos.
 ### Sugestões ou Contribuições:
 Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
 ### Licença:
-[MIT License](https://github.com/license.md) 
+[MIT License](Projeto_IA369/License.md) 
