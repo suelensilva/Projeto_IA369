@@ -38,4 +38,4 @@ Para entender como usa, por favor, consulte os testes escritos.
 ### Sugestões ou Contribuições:
 Consulte o arquivo contribuicao para verificar todas as formas de contribuições.
 ### Licença:
-Clique aqui.
+[MIT License](https://license.md) 
