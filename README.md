@@ -27,26 +27,15 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
 ### Pré-requisitos
    * Android Studio
       * Windows:
-          * Windows 7/8/10 (32 ou 64 bits)
-          * 2 GB de RAM (8 GB de RAM recomendada)
-          * 2 GB de espaço livre mínimo (4 GB recomendados)
-          * Resolução mínima de 1.280 x 800
+          * Conceitos em Computação Afetiva
           * Java 8
           * 64 bits e processador Intel (emulador)
        * Mac
-           * Mac OS X 10.8.5 ou superior.
-           * 2 GB de RAM (8 GB de RAM recomendada).
-           * 2 GB de espaço livre mínimo (4 GB recomendados).
-           * Resolução mínima de 1.280 x 800
+           * Mac OS X 10.8.5 ou superior.           
            * Java 6.
         * Linux
            * GNOME ou KDE Desktop.
-           * Ubuntu ...
-           * 64 bits / 32 bits.
-           * GNU C (glibc) 2.1 ou superior.
-           * 2 GB de RAM (8 GB de RAM recomendada).
-           * 2 GB de espaço livre mínimo (4 GB recomendados).
-           * Resolução mínima de 1.280 x 800
+           * Ubuntu ...      
            * Java 8
            * 64 bits e processador Intel (emulador).
           
