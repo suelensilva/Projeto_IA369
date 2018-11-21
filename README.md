@@ -24,10 +24,10 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
              * Humor
 
 ## Começando
-### Pré-requisitos
+
+   * Conceitos em Computação Afetiva
    * Android Studio
       * Windows:
-          * Conceitos em Computação Afetiva
           * Java 8
           * 64 bits e processador Intel (emulador)
        * Mac
