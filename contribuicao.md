@@ -1,43 +1,5 @@
-## Contribuindo
-
-  Criar uma ligação remota com o repositório principal: `git remote add upstream git@github.com:@master/Projeto_IA369.git`;
-- Atualize seu repositório local: `git fetch upstream`;
-- Fazer a ligação `dev` com repositório principal: `git checkout upstream/dev -b dev`;
-- Crie o seu ramo de funcionalidade com base em dev: `git checkout -b my-new-feature`;
-## Corrida
-Instale módulos locais:
-console
-npm i
-
-Em seguida, você pode iniciar o servidor da web e executar testes com o seguinte comando:
-console 
-npm run test: assistir
-
-- Escreva testes para seu recurso;
-- Quando estiver pronto, continue com os próximos passos:
-
-- Assegure-se de que o código não tenha erros de lint;
-- Se algum erro foi exibido, execute `npm run format`para corrigi-lo;
-- Adicione suas alterações`git add .:`;
-- Confirmar as alterações:` git commit -m 'Add some feature'`;
-- Pressione para o ramo `git push origin my-new-feature`:
-- Envie uma solicitação pull para ramo `dev` invoque ` @master`: D
-## Executando testes uma vez
-- Apenas execute `npm test`.
-
-## Dicas
-- Envie apenas um recurso para solicitação pull;
-- Envie pequenos pedidos de pull;
-- Escreva testes para todos os recursos.
-## Construa etapas
-> Se você estiver enviando uma solicitação pull, não precisará executar esses comandos.
-
-Com a última versão de código no ramo `dev`, serão executados os seguintes passos:
-
-No ramo `dev`, basta executar este comando:
-console 
-versão npm <versão>
- 
-Quando `<version>` pode ser `patch`, `minor` ou `major`.
-
-E feito ;)
+## Contribuindo com o projeto
+No momento, as maiores contribuições são: utilizar a ferramenta, realizar o experimento.
+Pull requests são sempre bem-vindos. 
+O projeto tem como origem uma pesquisa técnica (em andamento) sobre utilização de linguagem de programação móvel e a computação afetiva.
+Acesse o [chat no gitter]( https://gitter.im/IA369_2018S2/Lobby) e fale conosco, independente do seu perfil.
