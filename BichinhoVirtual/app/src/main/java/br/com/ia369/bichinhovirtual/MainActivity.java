@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,6 +15,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -31,6 +33,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -85,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private TextView mLogTextView;
     private TextView mDetailsReportTextView;
     private EditText mEditText;
-    private ImageView mCreatureImageView;
+    private CreatureView mCreatureImageView;
+    private ImageView mCloud1ImageView;
+    private ImageView mCloud2ImageView;
     private SpeechRecognizer speechRecognizer;
 
     private String mTempPhotoPath;
@@ -121,6 +127,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mEditText = findViewById(R.id.input_edit_text);
         mEditText.setOnEditorActionListener(mOnEditorActionListener);
         mCreatureImageView = findViewById(R.id.creature);
+        mCloud1ImageView = findViewById(R.id.cloud_1);
+        mCloud2ImageView = findViewById(R.id.cloud_2);
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         speechRecognizer.setRecognitionListener(this);
@@ -150,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         scheduleEmotionEngineJob();
+
     }
 
     @Override
@@ -167,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             mLogTextView.setVisibility(View.GONE);
             mDetailsReportTextView.setVisibility(View.GONE);
         }
+
+        initAnimations();
     }
 
     @Override
@@ -195,78 +206,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mLogTextView.setText(logReport);
 
         if(creature.getPersonality() == AppraisalConstants.PERSONALITY_EXTROVERT) {
-
             mRootView.setBackgroundResource(R.drawable.background);
-
-            switch (emotion) {
-                case AppraisalConstants.EMOTION_FEAR:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_medo);
-                    break;
-                case AppraisalConstants.EMOTION_JOY:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
-                    break;
-                case AppraisalConstants.EMOTION_SADNESS:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_tristeza);
-                    break;
-                case AppraisalConstants.EMOTION_DISGUST:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_nojo);
-                    break;
-                case AppraisalConstants.EMOTION_ANGER:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_raiva);
-                    break;
-                case AppraisalConstants.EMOTION_SATISFACTION:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_animado);
-                    break;
-                case AppraisalConstants.EMOTION_DISTRESS:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_surpresa);
-                    break;
-                case AppraisalConstants.EMOTION_GRATITUDE:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_felicidade);
-                    break;
-                case AppraisalConstants.EMOTION_NEUTRAL:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_neutro);
-                    break;
-                case AppraisalConstants.EMOTION_BORED:
-                    mCreatureImageView.setImageResource(R.drawable.extrov_entediado);
-                    break;
-            }
-        } else if(creature.getPersonality() == AppraisalConstants.PERSONALITY_NEUROTIC){
-
+            mCloud1ImageView.setImageResource(R.drawable.nuvem_amarela);
+            mCloud2ImageView.setImageResource(R.drawable.nuvem_amarela);
+        } else if (creature.getPersonality() == AppraisalConstants.PERSONALITY_NEUROTIC) {
             mRootView.setBackgroundResource(R.drawable.background2);
-
-            switch (emotion) {
-                case AppraisalConstants.EMOTION_FEAR:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_medo);
-                    break;
-                case AppraisalConstants.EMOTION_JOY:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_felicidade);
-                    break;
-                case AppraisalConstants.EMOTION_SADNESS:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_tristeza);
-                    break;
-                case AppraisalConstants.EMOTION_DISGUST:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_nojo);
-                    break;
-                case AppraisalConstants.EMOTION_ANGER:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_raiva);
-                    break;
-                case AppraisalConstants.EMOTION_SATISFACTION:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_animado);
-                    break;
-                case AppraisalConstants.EMOTION_DISTRESS:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_surpresa);
-                    break;
-                case AppraisalConstants.EMOTION_GRATITUDE:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_felicidade);
-                    break;
-                case AppraisalConstants.EMOTION_NEUTRAL:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_neutro);
-                    break;
-                case AppraisalConstants.EMOTION_BORED:
-                    mCreatureImageView.setImageResource(R.drawable.neuro_entediado);
-                    break;
-            }
+            mCloud1ImageView.setImageResource(R.drawable.nuvem_azul);
+            mCloud2ImageView.setImageResource(R.drawable.nuvem_azul);
         }
+
+        mCreatureImageView.updateCreature(creature.getPersonality(), creature.getEmotion());
     }
 
     public void openSettings(View view) {
@@ -683,6 +632,29 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         intent.setAction(AppraisalConstants.ACTIVE_INPUT_ACTION);
         intent.putExtra(AppraisalConstants.INPUT_TYPE_EXTRA, type);
         startService(intent);
+    }
+
+    private void initAnimations() {
+        TranslateAnimation animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, -0.8f,
+                Animation.RELATIVE_TO_PARENT, 1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        animation.setDuration(60000);
+        animation.setRepeatMode(Animation.RESTART);
+        animation.setRepeatCount(-1);
+        mCloud1ImageView.startAnimation(animation);
+
+        TranslateAnimation cloud2Animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 1.0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f);
+        cloud2Animation.setDuration(75000);
+        cloud2Animation.setRepeatMode(Animation.RESTART);
+        cloud2Animation.setRepeatCount(-1);
+        cloud2Animation.setStartOffset(2000);
+        mCloud2ImageView.startAnimation(cloud2Animation);
     }
 
     static class ProcessImageAsyncTask extends AsyncTask<Void, Void, Boolean> {

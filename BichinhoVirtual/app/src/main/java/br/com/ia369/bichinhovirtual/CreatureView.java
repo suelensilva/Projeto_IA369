@@ -1,0 +1,121 @@
+package br.com.ia369.bichinhovirtual;
+
+import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+
+import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
+
+public class CreatureView extends android.support.v7.widget.AppCompatImageView {
+
+    int mCurrEmotion = AppraisalConstants.EMOTION_NEUTRAL;
+    int mCurrPersonality = AppraisalConstants.PERSONALITY_EXTROVERT;
+    
+    public CreatureView(Context context) {
+        super(context);
+    }
+
+    public CreatureView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public CreatureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+    
+    public void updateCreature(int personality, int emotion) {
+        mCurrPersonality = personality;
+        mCurrEmotion = emotion;
+        stopAnimation();
+        init();
+    }
+
+    private void init() {
+
+        if(mCurrPersonality == AppraisalConstants.PERSONALITY_EXTROVERT) {
+
+            switch (mCurrEmotion) {
+                case AppraisalConstants.EMOTION_FEAR:
+                    setImageResource(R.drawable.extrov_medo);
+                    break;
+                case AppraisalConstants.EMOTION_JOY:
+                    setImageResource(R.drawable.extrov_felicidade);
+                    break;
+                case AppraisalConstants.EMOTION_SADNESS:
+                    setImageResource(R.drawable.extrov_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_DISGUST:
+                    setImageResource(R.drawable.extrov_nojo);
+                    break;
+                case AppraisalConstants.EMOTION_ANGER:
+                    setImageResource(R.drawable.extrov_raiva);
+                    break;
+                case AppraisalConstants.EMOTION_SATISFACTION:
+                    setImageResource(R.drawable.extrov_satisfacao);
+                    break;
+                case AppraisalConstants.EMOTION_DISTRESS:
+                    setImageResource(R.drawable.extrov_surpresa);
+                    break;
+                case AppraisalConstants.EMOTION_GRATITUDE:
+                    setImageResource(R.drawable.extrov_gratidao);
+                    break;
+                case AppraisalConstants.EMOTION_NEUTRAL:
+                    setImageResource(R.drawable.extrov_neutral_anim);
+                    initAnimation();
+                    break;
+                case AppraisalConstants.EMOTION_BORED:
+                    setImageResource(R.drawable.extrov_bored_anim);
+                    initAnimation();
+                    break;
+            }
+        } else if(mCurrPersonality == AppraisalConstants.PERSONALITY_NEUROTIC){
+
+            switch (mCurrEmotion) {
+                case AppraisalConstants.EMOTION_FEAR:
+                    setImageResource(R.drawable.neuro_medo);
+                    break;
+                case AppraisalConstants.EMOTION_JOY:
+                    setImageResource(R.drawable.neuro_alegria);
+                    break;
+                case AppraisalConstants.EMOTION_SADNESS:
+                    setImageResource(R.drawable.neuro_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_DISGUST:
+                    setImageResource(R.drawable.neuro_nojo);
+                    break;
+                case AppraisalConstants.EMOTION_ANGER:
+                    setImageResource(R.drawable.neuro_raiva);
+                    break;
+                case AppraisalConstants.EMOTION_SATISFACTION:
+                    setImageResource(R.drawable.neuro_satisfacao);
+                    break;
+                case AppraisalConstants.EMOTION_DISTRESS:
+                    setImageResource(R.drawable.neuro_tristeza);
+                    break;
+                case AppraisalConstants.EMOTION_GRATITUDE:
+                    setImageResource(R.drawable.neuro_gratidao);
+                    break;
+                case AppraisalConstants.EMOTION_NEUTRAL:
+                    setImageResource(R.drawable.neuro_neutral_anim);
+                    initAnimation();
+                    break;
+                case AppraisalConstants.EMOTION_BORED:
+                    setImageResource(R.drawable.neuro_bored_anim);
+                    initAnimation();
+                    break;
+            }
+        }
+    }
+
+    private void initAnimation() {
+        final AnimationDrawable creatureAnimation = (AnimationDrawable) getDrawable();
+        creatureAnimation.start();
+    }
+
+    private void stopAnimation() {
+        if(getDrawable() instanceof AnimationDrawable) {
+            ((AnimationDrawable) getDrawable()).stop();
+        }
+    }
+}

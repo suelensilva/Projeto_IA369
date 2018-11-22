@@ -9,6 +9,24 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/cloud_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/nuvem_amarela"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/creature"/>
+
+    <ImageView
+        android:id="@+id/cloud_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/nuvem_amarela"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/creature"/>
+
+    <ImageView
         android:id="@+id/config_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -45,12 +63,11 @@
         app:layout_constraintTop_toBottomOf="@+id/log_text"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <ImageView
+    <br.com.ia369.bichinhovirtual.CreatureView
         android:id="@+id/creature"
         android:layout_width="219dp"
         android:layout_height="219dp"
         android:layout_marginTop="50dp"
-        android:src="@drawable/extrov_neutro"
         android:contentDescription="@string/creature_content_description"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
