@@ -31,7 +31,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
    * Android Studio    
    * Java 8           
 ### Uso:
-Para entender como usa, por favor, consulte os testes escritos.
+Por favor, consulte os testes escritos.
 ## Informações Adicionais
 ### Sugestões ou Contribuições:
 Consulte o arquivo [contribuição](https://github.com/suelensilva/Projeto_IA369/blob/master/contribuicao.md) para verificar todas as formas de contribuições.
