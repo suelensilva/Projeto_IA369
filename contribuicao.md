@@ -36,9 +36,9 @@ npm run test: assistir
 Com a última versão de código no ramo `dev`, serão executados os seguintes passos:
 
 No ramo `dev`, basta executar este comando:
-`` `console 
+``console 
 versão npm <versão>
- `` `
+ `` 
 Quando `<version>` pode ser `patch`, `minor` ou `major`.
 
 E feito ;)
