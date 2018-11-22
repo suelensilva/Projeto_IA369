@@ -8,12 +8,12 @@
 Instale módulos locais:
 console `` `
 npm i
-``
+`` `
 
 Em seguida, você pode iniciar o servidor da web e executar testes com o seguinte comando:
 console `` `
 npm run test: assistir
-``
+`` `
 - Escreva testes para seu recurso;
 - Quando estiver pronto, continue com os próximos passos:
 
@@ -36,9 +36,9 @@ npm run test: assistir
 Com a última versão de código no ramo `dev`, serão executados os seguintes passos:
 
 No ramo `dev`, basta executar este comando:
-``console 
+console `` `
 versão npm <versão>
- `` 
+ `` `
 Quando `<version>` pode ser `patch`, `minor` ou `major`.
 
 E feito ;)
