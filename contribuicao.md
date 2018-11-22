@@ -38,7 +38,7 @@ Com a última versão de código no ramo `dev`, serão executados os seguintes p
 No ramo `dev`, basta executar este comando:
 console `` `
 versão npm <versão>
-``
-Quando `<version>`pode ser `patch`, `minor` ou `major`.
+`` `
+Quando `<version>` pode ser `patch`, `minor` ou `major`.
 
 E feito ;)
