@@ -1,6 +1,6 @@
 ## Contribuindo
 
-- Criar uma ligação remota com o repositório principal: git remote add upstream git@github.com:@master/Projeto_IA369.git;
+  Criar uma ligação remota com o repositório principal: git remote add upstream git@github.com:@master/Projeto_IA369.git;
 - Atualize seu repositório local: git fetch upstream;
 - Fazer a ligação devramo com repositório principal: git checkout upstream/dev -b dev;
 - Crie o seu ramo de funcionalidade com base em dev: git checkout -b my-new-feature;
