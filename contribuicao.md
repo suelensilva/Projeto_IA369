@@ -18,7 +18,7 @@ npm run test: assistir
 - Quando estiver pronto, continue com os próximos passos:
 
 - Assegure-se de que o código não tenha erros de lint;
-- Se algum erro foi exibido, execute npm run formatpara corrigi-lo;
+- Se algum erro foi exibido, execute `npm run format`para corrigi-lo;
 - Adicione suas alterações`git add .:`;
 - Confirmar as alterações:` git commit -m 'Add some feature'`;
 - Pressione para o ramo `git push origin my-new-feature`:
