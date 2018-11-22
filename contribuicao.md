@@ -33,11 +33,12 @@ npm run test: assistir
 ## Construa etapas
 > Se você estiver enviando uma solicitação pull, não precisará executar esses comandos.
 
-Com a última versão de código na devramificação, serão executados os seguintes passos:
+Com a última versão de código no ramo `dev`, serão executados os seguintes passos:
 
-Na devramificação, basta executar este comando:
-
+No ramo `dev`, basta executar este comando:
+console `` `
 versão npm <versão>
-Quando <version>pode ser `patch`, `minor` ou `major`.
+``
+Quando `<version>`pode ser `patch`, `minor` ou `major`.
 
 E feito ;)
