@@ -1,4 +1,4 @@
- ![alt text](https://github.com/suelensilva/Projeto_IA369/blob/master/BichinhoVirtual/screenshots/bichinho.png "Bichinho")
+ :![alt text](https://github.com/suelensilva/Projeto_IA369/blob/master/BichinhoVirtual/screenshots/bichinho.png "Bichinho"):
 # Bichinho Virtual Afetivo 
 Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções do usuário e, a partir delas e de outros estímulos, sintetizar emoções na expressão facial do Bichinho de acordo com seu humor e personalidade.
 
