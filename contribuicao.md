@@ -21,7 +21,7 @@ npm run test: assistir
 - Se algum erro foi exibido, execute npm run formatpara corrigi-lo;
 - Adicione suas alterações`git add .:`;
 - Confirmar as alterações:` git commit -m 'Add some feature'`;
-- Empurre para o ramo`git push origin my-new-feature:@master`: D;
+- Empurre para o ramo`git push origin my-new-feature:@master`: D
 - Envie uma solicitação pull para devbranch e convoque 
 - Executando testes uma vez
 - Apenas execute `npm test`.
