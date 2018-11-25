@@ -1,6 +1,7 @@
 package br.com.ia369.bichinhovirtual.appraisal;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.occ.common.Evaluator;
 import com.occ.common.VariableType;
@@ -147,7 +148,8 @@ public class Appraisal {
             if(isDisgust) {
                 return emotion;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e("Appraisal", "Exception while evaluating reproach", e);
         }
 
         return null;

@@ -38,6 +38,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.connection.AdvertisingOptions;
+import com.google.android.gms.nearby.connection.ConnectionInfo;
+import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
+import com.google.android.gms.nearby.connection.ConnectionResolution;
+import com.google.android.gms.nearby.connection.ConnectionsClient;
+import com.google.android.gms.nearby.connection.DiscoveredEndpointInfo;
+import com.google.android.gms.nearby.connection.DiscoveryOptions;
+import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
+import com.google.android.gms.nearby.connection.Strategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
@@ -78,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_STORAGE_PERMISSION = 1;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 2;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
 
     private static final String FILE_PROVIDER_AUTHORITY = "br.com.ia369.bichinhovirtual.fileprovider";
 
@@ -98,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
 
+    private ConnectionsClient mConnectionsClient;
+
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
@@ -111,6 +126,27 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             return false;
         }
     };
+
+    ConnectionLifecycleCallback callback = new ConnectionLifecycleCallback() {
+        @Override
+        public void onConnectionInitiated(@NonNull String s, @NonNull ConnectionInfo connectionInfo) {
+            Log.d(TAG, "onConnectionInitiated");
+        }
+
+        @Override
+        public void onConnectionResult(@NonNull String s, @NonNull ConnectionResolution connectionResolution) {
+            Log.d(TAG, "onConnectionResult");
+        }
+
+        @Override
+        public void onDisconnected(@NonNull String s) {
+            Log.d(TAG, "onDisconnected");
+        }
+    };
+
+    AdvertisingOptions advertisingOptions = new AdvertisingOptions.Builder()
+            .setStrategy(Strategy.P2P_POINT_TO_POINT)
+            .build();
 
 
     @Override
@@ -156,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         scheduleEmotionEngineJob();
-
     }
 
     @Override
@@ -175,12 +210,57 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             mDetailsReportTextView.setVisibility(View.GONE);
         }
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestNearbyPermission();
+        } else {
+            startNearby();
+        }
+
         initAnimations();
+    }
+
+    private void startNearby() {
+
+        mConnectionsClient = Nearby.getConnectionsClient(this);
+
+        mConnectionsClient.startAdvertising("10003", "br.com.ia369.bichinhovirtual", callback, advertisingOptions);
+
+        EndpointDiscoveryCallback callback = new EndpointDiscoveryCallback() {
+            @Override
+            public void onEndpointFound(@NonNull String s, @NonNull DiscoveredEndpointInfo discoveredEndpointInfo) {
+                Log.d(TAG, "onEndpointFound");
+                triggerInputAction(AppraisalConstants.INPUT_BLUETOOTH);
+            }
+
+            @Override
+            public void onEndpointLost(@NonNull String s) {
+                Log.d(TAG, "onEndpointLost");
+            }
+        };
+
+        DiscoveryOptions options = new DiscoveryOptions.Builder()
+                .setStrategy(Strategy.P2P_POINT_TO_POINT)
+                .build();
+
+        Task<Void> task = mConnectionsClient.startDiscovery("br.com.ia369.bichinhovirtual", callback, options);
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         mSensorManager.unregisterListener(this);
+
+        if(mConnectionsClient != null) {
+            mConnectionsClient.stopAdvertising();
+            mConnectionsClient.stopDiscovery();
+            mConnectionsClient.stopAllEndpoints();
+        }
         super.onPause();
     }
 
@@ -214,6 +294,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         mCreatureImageView.updateCreature(creature.getPersonality(), creature.getEmotion());
+    }
+
+    private void requestNearbyPermission() {
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+            startNearby();
+        }
     }
 
     public void openSettings(View view) {

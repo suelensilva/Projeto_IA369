@@ -154,6 +154,15 @@
     "expectationDeviation": 0.5
   },
   {
+    "personality": 100,
+    "input": 216,
+    "unexpectedness": 0.3,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 1.0,
+    "desirability": 2.5
+  },
+  {
     "personality": 101,
     "input": 200,
     "unexpectedness": 1.0,
@@ -305,6 +314,16 @@
     "proximity": 0.3,
     "arousal": 0.3,
     "desirability": -0.5
+  },
+  {
+    "personality": 101,
+    "input": 216,
+    "unexpectedness": 1.0,
+    "senseOfReality": 0.3,
+    "proximity": 0.3,
+    "arousal": 0.7,
+    "praiseworthiness": -2.0,
+    "expectationDeviation": 1.0
   }
 ]
 

@@ -32,18 +32,10 @@ public class AppraisalConstants {
     public static final int INPUT_TIME_INDISPOSED = 213;
     public static final int INPUT_LOCATION_IDLE = 214;
     public static final int INPUT_LOCATION_MOVING = 215;
+    public static final int INPUT_BLUETOOTH = 216;
 
     public static final String ACTIVE_INPUT_ACTION = "active_input";
     public static final String PASSIVE_INPUT_ACTION = "passive_input";
 
     public static final String INPUT_TYPE_EXTRA = "input_type";
-
-    public static final String INPUT_FORECAST_RAIN_ACTION = "forecast_rain";
-    public static final String INPUT_FORECAST_COLD_ACTION = "forecast_cold";
-    public static final String INPUT_FORECAST_HOT_ACTION = "forecast_hot";
-    public static final String INPUT_FORECAST_GOOD_ACTION = "forecast_good";
-    public static final String INPUT_TIME_DISPOSED_ACTION = "time_disposed";
-    public static final String INPUT_TIME_INDISPOSED_ACTION = "time_indisposed";
-    public static final String INPUT_LOCATION_IDLE_ACTION = "location_idle";
-    public static final String INPUT_LOCATION_MOVING_ACTION = "location_moving";
 }
