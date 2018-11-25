@@ -55,7 +55,7 @@ public class CreatureView extends android.support.v7.widget.AppCompatImageView {
                     setImageResource(R.drawable.extrov_satisfacao);
                     break;
                 case AppraisalConstants.EMOTION_DISTRESS:
-                    setImageResource(R.drawable.extrov_surpresa);
+                    setImageResource(R.drawable.extrov_tristeza);
                     break;
                 case AppraisalConstants.EMOTION_GRATITUDE:
                     setImageResource(R.drawable.extrov_gratidao);

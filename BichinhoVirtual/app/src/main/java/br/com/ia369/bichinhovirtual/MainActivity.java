@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,7 +14,6 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private static final String FILE_PROVIDER_AUTHORITY = "br.com.ia369.bichinhovirtual.fileprovider";
 
-    private static final double SMILING_PROB_THRESHOLD = .15;
+    private static final double SMILING_PROB_THRESHOLD = .20;
 
     private View mRootView;
     private TextView mLogTextView;
@@ -553,10 +551,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
     }
 
-    boolean processImage() {
+    Boolean processImage() {
         // Resample the saved image to fit the ImageView
         Bitmap resultBitmap = BitmapUtils.resamplePic(this, mTempPhotoPath);
-        return isSmiling(resultBitmap);
+        if(resultBitmap != null) {
+            return isSmiling(resultBitmap);
+        }
+        return null;
     }
 
     private void showFaceResult(boolean isSmiling) {
@@ -572,7 +573,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         mDetailsReportTextView.setText(faceReportString);
     }
 
-    private boolean isSmiling(Bitmap picture) {
+    private boolean isSmiling(@NonNull  Bitmap picture) {
         // Create the face detector, disable tracking and enable classifications
         FaceDetector detector = new FaceDetector.Builder(this)
                 .setTrackingEnabled(false)
@@ -684,7 +685,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             MainActivity mainActivity = activity.get();
             if(mainActivity != null) {
                 mainActivity.dismissProgressView();
-                mainActivity.showFaceResult(aBoolean);
+                if(aBoolean != null) {
+                    mainActivity.showFaceResult(aBoolean);
+                }
             }
         }
     }
