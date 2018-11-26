@@ -697,7 +697,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         SparseArray<Face> faces = detector.detect(frame);
 
         if (faces.size() == 0) {
-            Toast.makeText(this, "Nenhuma face encontrada.", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Nenhuma face encontrada.", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Face face = faces.valueAt(0);
             return face.getIsSmilingProbability() > SMILING_PROB_THRESHOLD;

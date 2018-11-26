@@ -319,7 +319,7 @@ public class EmotionEngineService extends Service {
                     break;
                 default:
                     newEmotion = AppraisalConstants.EMOTION_NEUTRAL;
-                    newEmotionIntensity = 5.0;
+                    newEmotionIntensity = 1.0;
                     break;
             }
         }

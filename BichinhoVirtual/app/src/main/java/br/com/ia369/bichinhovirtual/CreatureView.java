@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
 
@@ -11,17 +13,27 @@ public class CreatureView extends android.support.v7.widget.AppCompatImageView {
 
     int mCurrEmotion = AppraisalConstants.EMOTION_NEUTRAL;
     int mCurrPersonality = AppraisalConstants.PERSONALITY_EXTROVERT;
+
+    Animation mFloatingAnim;
     
     public CreatureView(Context context) {
         super(context);
+        startFloatingAnimation();
     }
 
     public CreatureView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        startFloatingAnimation();
     }
 
     public CreatureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        startFloatingAnimation();
+    }
+
+    private void startFloatingAnimation() {
+        mFloatingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.floating_anim);
+        setAnimation(mFloatingAnim);
     }
     
     public void updateCreature(int personality, int emotion) {

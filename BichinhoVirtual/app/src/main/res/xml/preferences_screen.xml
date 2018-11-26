@@ -20,7 +20,7 @@
         android:summary="Intervalo de decaimento" />
 
     <EditTextPreference
-        android:defaultValue="0.5"
+        android:defaultValue="0.1"
         android:title="Taxa de decaimento"
         android:key="@string/decay_factor_pref"
         android:numeric="decimal"
