@@ -36,10 +36,12 @@ public class EmotionEngineService extends Service {
     private static final String TAG = EmotionEngineService.class.getSimpleName();
 
     private static final String INTERVAL_REQUEST = "interval_request";
+    public static final String RESET_TO_NEUTRAL_REQUEST = "reset_to_neutral";
 
     public static final int REQUEST_CODE = 42;
     public static final int NOTIFICATION_ID = 3;
     public static final String CHANNEL_ID = "bichinho_virtual";
+    public static final double DEFAULT_NEUTRAL_INTENSITY = 0.3;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,6 +72,9 @@ public class EmotionEngineService extends Service {
                             if(inputType > 0) {
                                 new AppraiseActiveInputAsyncTask(this).execute(inputType);
                             }
+                            break;
+                        case RESET_TO_NEUTRAL_REQUEST:
+                            new ResetToNeutralInputAsyncTask(this).execute();
                             break;
                     }
                 }
@@ -298,10 +303,35 @@ public class EmotionEngineService extends Service {
         }
     }
 
+    static class ResetToNeutralInputAsyncTask extends AsyncTask<Void, Void, Void> {
+        WeakReference<EmotionEngineService> emotionEngineServiceWeakReference;
+
+        ResetToNeutralInputAsyncTask(EmotionEngineService instance) {
+            this.emotionEngineServiceWeakReference = new WeakReference<>(instance);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Log.d(TAG, "Appraising active inputs...");
+
+            EmotionEngineService emotionEngineService = emotionEngineServiceWeakReference.get();
+            Application application = emotionEngineService.getApplication();
+            EmotionRepository repository = new EmotionRepository(application);
+
+            Creature creature = repository.getCreature();
+            creature.setEmotion(AppraisalConstants.EMOTION_NEUTRAL);
+            creature.setIntensity(DEFAULT_NEUTRAL_INTENSITY);
+
+            repository.updateCreature(creature);
+
+            return null;
+        }
+    }
+
     private void decayEmotionIntensity(Creature creature) {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String decayFactorString = preferences.getString(getString(R.string.decay_factor_pref), "0.5");
+        String decayFactorString = preferences.getString(getString(R.string.decay_factor_pref), "0.06");
         double decayFactor = Double.valueOf(decayFactorString);
 
         double emotionIntensity = creature.getIntensity();
@@ -319,7 +349,7 @@ public class EmotionEngineService extends Service {
                     break;
                 default:
                     newEmotion = AppraisalConstants.EMOTION_NEUTRAL;
-                    newEmotionIntensity = 1.0;
+                    newEmotionIntensity = DEFAULT_NEUTRAL_INTENSITY;
                     break;
             }
         }

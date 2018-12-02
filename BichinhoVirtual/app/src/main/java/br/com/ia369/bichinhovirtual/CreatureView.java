@@ -1,13 +1,16 @@
 package br.com.ia369.bichinhovirtual;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
+import br.com.ia369.bichinhovirtual.appraisal.EmotionEngineService;
 
 public class CreatureView extends android.support.v7.widget.AppCompatImageView {
 
@@ -18,17 +21,17 @@ public class CreatureView extends android.support.v7.widget.AppCompatImageView {
     
     public CreatureView(Context context) {
         super(context);
-        startFloatingAnimation();
+        setup();
     }
 
     public CreatureView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        startFloatingAnimation();
+        setup();
     }
 
     public CreatureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        startFloatingAnimation();
+        setup();
     }
 
     private void startFloatingAnimation() {
@@ -41,6 +44,23 @@ public class CreatureView extends android.support.v7.widget.AppCompatImageView {
         mCurrEmotion = emotion;
         stopAnimation();
         init();
+    }
+
+    private void setup() {
+        startFloatingAnimation();
+        setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(mCurrEmotion != AppraisalConstants.EMOTION_BORED &&
+                        mCurrEmotion != AppraisalConstants.EMOTION_NEUTRAL) {
+                    Intent intent = new Intent(getContext(), EmotionEngineService.class);
+                    intent.setAction(EmotionEngineService.RESET_TO_NEUTRAL_REQUEST);
+                    getContext().startService(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void init() {
