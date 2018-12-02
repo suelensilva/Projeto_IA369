@@ -16,7 +16,8 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
        * Previsão do tempo
        
 ## Screenshots
-![alt text](https://github.com/suelensilva/Projeto_IA369/blob/master/BichinhoVirtual/screenshots/screenshot-1.png "Tela principal")
+![alt text](https://github.com/suelensilva/Projeto_IA369/blob/master/BichinhoVirtual/screenshots/screenshot-1.png "Tela principal - Bichinho Extrovertido")
+![alt text](https://github.com/suelensilva/Projeto_IA369/blob/master/BichinhoVirtual/screenshots/screenshot-2.png "Tela principal - Bichinho Neurótico")
 
 ## Ferramentas e Abordagens adotadas:
   * Ferramentas:
