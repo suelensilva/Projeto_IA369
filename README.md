@@ -23,7 +23,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
   * Ferramentas:
      * [Android Studio](https://developer.android.com/studio/?hl=pt-br) - Ambiente de desenvolvimento
      * [API IBM Watson Natural Language Understanding](https://www.ibm.com/watson/services/natural-language-understanding/) - API para detectar emoções em textos
-     * Serviço de tradução: [API Yandex](https://tech.yandex.com/translate/) - API para traduzir textos do português para o inglês
+     * [API Yandex](https://tech.yandex.com/translate/) - API para traduzir textos do português para o inglês
      * [Google Mobile Vision API para Android](https://developers.google.com/vision/introduction) - API para detectar landmarks em uma imagem de face e detectar sorrisos 
      * [Toolkit OpenSMILE](https://www.audeering.com/technology/opensmile/) - Ferramenta de extração de features acústicas
      * [Weka](https://www.cs.waikato.ac.nz/ml/weka/) - Coleção de algoritmos de machine learning 
