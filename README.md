@@ -22,6 +22,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
 ## Ferramentas e Abordagens adotadas:
   * Ferramentas:
      * [Android Studio](https://developer.android.com/studio/?hl=pt-br) - Ambiente de desenvolvimento
+     * [emotions-simulation](https://github.com/priyeshkpandey/emotions-simulation) - Biblioteca de simulação de emoções baseada no modelo de emoções OCC
      * [API IBM Watson Natural Language Understanding](https://www.ibm.com/watson/services/natural-language-understanding/) - API para detectar emoções em textos
      * [API Yandex](https://tech.yandex.com/translate/) - API para traduzir textos do português para o inglês
      * [Google Mobile Vision API para Android](https://developers.google.com/vision/introduction) - API para detectar landmarks em uma imagem de face e detectar sorrisos 
@@ -31,6 +32,15 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
   * Abordagens:
      * Teorias de Appraisal: síntese de emoções baseado no modelo OCC (Ortony, A., Clore, G., & Collins, A. (1988). The Cognitive Structure of Emotions. Cambridge: Cambridge University Press. doi:10.1017/CBO9780511571299)
      * Modelo de personalidades: baseado no modelo Big Five (Goldberg, L. R. (1990). An alternative "description of personality": the big-five factor structure. Journal of personality and social psychology, 59(6), 1216.)
+     
+## Instruções de uso
+O instalador pode ser acessado neste [link](https://drive.google.com/a/unicamp.br/file/d/1vg9sVvcNC7skyIUJXaseOy57flHD0YJP/view?usp=sharing) (Obs.: acessível somente no domínio Unicamp).
+
+O aplicativo é compatível com versões de Android 6.0 ou superior.
+ 
+Ao abrir o aplicativo, o Bichinho Virtual estará no estado neutro e já iniciará o processo de decaimento de humor. É possível interagir com ele utilizando o campo de texto, a câmera do celular ou o microfone através das opções na parte inferior da tela. O Bichinho Virtual também reage a estímulos gerados a partir do sensor de proximidade do dispositivo e do Bluetooth, quando houver outro dispositivo com o Bichinho Virtual aberto.
+
+No canto superior direito está a opção para acessar a tela de configurações, onde é possível habilitar o log na tela principal, e modificar algumas informações que facilitam os testes e observações, tais como alternar entre as personalidades disponíveis, modificar a taxa e intervalo de decaimento, alterar a previsão do tempo, o período de disposição do Bichinho e a simulação de movimento.
 
 ## Instruções de compilação
   * Instale a IDE Android Studio conforme as instruções específicas para o seu sistema operacional. Consulte a [documentação](https://developer.android.com/studio/install?hl=pt-br) oficial para maiores detalhes.
@@ -44,7 +54,7 @@ Bichinho Virtual Afetivo é uma aplicação móvel capaz de reconhecer emoções
     ```
   * Utilizando o emulador ou um dispositivo conectado, clique na opção `Run`do Android Studio para buildar e executar o aplicativo.
   
-License
+Licença
 -------
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
 license agreements.  See the NOTICE file distributed with this work for
