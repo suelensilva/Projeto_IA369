@@ -1,6 +1,7 @@
 package com.occ.common;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import com.occ.entities.Emotion;
 import com.occ.entities.Variable;
@@ -40,7 +41,7 @@ public class Evaluator {
 	}
 	
 	private static boolean evaluateConstraint(ConstraintKeys constraintKey, String value) throws Exception {
-		NumberFormat numberFormat = NumberFormat.getInstance();
+		NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 		switch(constraintKey) {
 		case IS_NEGATIVE:
 			return (null != value && !value.trim().equals("")) && (numberFormat.parse(value).doubleValue() < 0.0);
@@ -59,7 +60,7 @@ public class Evaluator {
 		final Rule rule = emo.getRule();
 		int numOfVariables = rule.getAtomicRules().keySet().size();
 		double potential = 0.0;
-		NumberFormat numberFormat = NumberFormat.getInstance();
+		NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 		for (VariableType ruleVariableType : rule.getAtomicRules().keySet()) {
 			Variable variable = model.getVariableOfType(ruleVariableType); 
 			potential += Math.abs(numberFormat.parse(variable.getValue()).doubleValue());

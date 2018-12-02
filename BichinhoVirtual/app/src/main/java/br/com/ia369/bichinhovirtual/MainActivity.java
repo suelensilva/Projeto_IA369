@@ -56,6 +56,7 @@ import com.google.android.gms.vision.face.FaceDetector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.radarcns.opensmile.SmileJNI;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +64,10 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import br.com.ia369.bichinhovirtual.appraisal.Appraisal;
 import br.com.ia369.bichinhovirtual.appraisal.AppraisalConstants;
@@ -74,6 +79,7 @@ import br.com.ia369.bichinhovirtual.retrofit.IbmNluService;
 import br.com.ia369.bichinhovirtual.retrofit.ServiceGenerator;
 import br.com.ia369.bichinhovirtual.retrofit.TranslateService;
 import br.com.ia369.bichinhovirtual.util.BitmapUtils;
+import br.com.ia369.bichinhovirtual.util.WavRecorder;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -82,6 +88,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+//import weka.classifiers.Classifier;
+//import weka.core.Instances;
+//import weka.core.converters.ConverterUtils;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener, SensorEventListener {
 
@@ -110,6 +119,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private SensorManager mSensorManager;
     private Sensor mProximity;
     private PowerManager.WakeLock mWakeLock;
+
+    private WavRecorder mWavRecorder;
+    private String mFeaturesFile;
+
+    private ScheduledFuture<?> audioReadFuture;
+    private ScheduledExecutorService executor;
 
     private ConnectionsClient mConnectionsClient;
 
@@ -172,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onChanged(@Nullable Creature creature) {
                 if (creature != null) {
-                    updateCreature(creature);
+                    MainActivity.this.updateCreature(creature);
                 }
             }
         });
@@ -192,6 +207,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         scheduleEmotionEngineJob();
+
+        executor = Executors.newSingleThreadScheduledExecutor();
+        mWavRecorder = new WavRecorder(getExternalFilesDir("") + "/temp.wav");
     }
 
     @Override
@@ -246,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         Task<Void> task = mConnectionsClient.startDiscovery("br.com.ia369.bichinhovirtual", callback, options);
         task.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task1) {
 
             }
         });
@@ -334,11 +352,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
 
             // If you do not have permission, request it
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_RECORD_AUDIO_PERMISSION);
         } else {
             launchSpeechRecognizer();
@@ -357,7 +378,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     @Override
-    public void onReadyForSpeech(Bundle bundle) { }
+    public void onReadyForSpeech(Bundle bundle) {
+        //mWavRecorder.startRecording();
+    }
 
     @Override
     public void onBeginningOfSpeech() { }
@@ -366,17 +389,24 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onRmsChanged(float v) { }
 
     @Override
-    public void onBufferReceived(byte[] bytes) { }
+    public void onBufferReceived(byte[] bytes) {
+
+    }
 
     @Override
     public void onEndOfSpeech() {
         dismissRecordingAudioView();
+
+        //mWavRecorder.stopRecording();
+        //extractFeatures();
     }
 
     @Override
     public void onError(int i) {
         Log.d(TAG, "onError "+i);
+
         dismissRecordingAudioView();
+        mWavRecorder.stopRecording();
     }
 
     @Override
@@ -771,6 +801,71 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cloud2Animation.setStartOffset(2000);
         mCloud2ImageView.startAnimation(cloud2Animation);
     }
+
+    private void extractFeatures() {
+        long audioDurationS = 3L;
+        long audioRecordRateS = 3600L;
+        String audioConfigFile = "emo_large.conf";
+        setAudioUpdateRate(audioRecordRateS, audioDurationS, audioConfigFile);
+    }
+
+    private void setAudioUpdateRate(final long period, final long duration, final String configFile) {
+        SmileJNI.prepareOpenSMILE(this);
+        final String conf = getCacheDir() + "/" + configFile;
+
+        synchronized (this) {
+            if (audioReadFuture != null) {
+                audioReadFuture.cancel(false);
+            }
+            audioReadFuture = executor.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    long timestamp = System.currentTimeMillis();
+                    mFeaturesFile = MainActivity.this.getExternalFilesDir("") + "/" + timestamp + "_features.arff";
+                    final String dataPath = mFeaturesFile;
+                    SmileJNI smileJNI = new SmileJNI();
+                    //smileJNI.addListener(this::loadModel);
+                    smileJNI.runOpenSMILE(conf, dataPath, duration);
+                }
+            }, 0, period, TimeUnit.SECONDS);
+        }
+    }
+
+    /*public Classifier loadModel(){
+
+        AssetManager assetManager = getAssets();
+        Classifier cls;
+
+        String modelName = "emo_weka_multiclass.model";
+        try {
+            cls = (Classifier) weka.core.SerializationHelper.read(assetManager.open(modelName));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Instances data1;
+        try {
+            File initialFile = new File(mFeaturesFile);
+            InputStream targetStream = new FileInputStream(initialFile);
+            data1 = ConverterUtils.DataSource.read(targetStream);
+            data1.deleteAttributeAt(0);
+            data1.setClassIndex(data1.numAttributes()-1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        try {
+            double pred = cls.classifyInstance(data1.instance(0));
+            Log.d("WEKA", data1.instance(0).toString(data1.classIndex()) + " - ");
+            Log.d("WEKA", "Pred = "+Double.valueOf(pred).intValue());
+            //Log.d("WEKA", Utils.arrayToString(dist));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cls;
+    }*/
 
     static class ProcessImageAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
